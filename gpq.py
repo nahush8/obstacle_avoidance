@@ -11,8 +11,10 @@ import matplotlib.pyplot as plt
 import pickle
 import time
 import gameEngine
+import matplotlib.pyplot as plt
 
 record = []
+plt.ion()
 
 class gp_prediction():
 	def __init__(self):
@@ -69,6 +71,7 @@ class gp_prediction():
 
 if __name__ == "__main__":
 	i = 0
+	j = 0
 	game_obj = gameEngine.GameState()
 	gp_obj = gp_prediction()
 	sum_of_reward_per_epoch = 0
@@ -87,6 +90,10 @@ if __name__ == "__main__":
 		sum_of_reward_per_epoch += curr_reward
 		if curr_reward == -500:
 			gp_obj.gpq(record)
+			plt.scatter(j,sum_of_reward_per_epoch)
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
+
+			j += 1
 		i+= 1
+		plt.pause(0.05)
