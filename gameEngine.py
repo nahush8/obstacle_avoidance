@@ -24,10 +24,12 @@ show_sensors = True
 draw_screen = True
 
 
+
 class GameState:
     def __init__(self):
         # Global-ish.
         self.crashed = False
+
 
         # Physics stuff.
         self.space = pymunk.Space()
@@ -105,6 +107,8 @@ class GameState:
         self.space.add(self.car_body, self.car_shape)
 
     def frame_step(self, action):
+        # Get the current location and the readings there.
+
         if action == 0:  # Turn left.
             self.car_body.angle -= .2
         elif action == 1:  # Turn right.
@@ -146,8 +150,8 @@ class GameState:
             # Higher readings are better, so return the sum.
             reward = -5 + int(self.sum_readings(readings) / 10)
         self.num_steps += 1
-
         return reward, state
+
 
     def move_obstacles(self):
         # Randomly move obstacles around.
@@ -163,7 +167,7 @@ class GameState:
         self.cat_body.velocity = speed * direction
 
     def car_is_crashed(self, readings):
-        if readings[0] == 1 or readings[1] == 1 or readings[2] == 1:
+        if readings[0] == 1 or readings[1] == 1 or readings[2] == 1 or readings[3] == 1 or readings[4] == 1 or readings[5] == 1:
             return True
         else:
             return False
@@ -215,7 +219,6 @@ class GameState:
         readings.append(self.get_arm_distance(arm_left, x, y, angle, 1.0))
         readings.append(self.get_arm_distance(arm_middle1, x, y, angle, 0.5))
         readings.append(self.get_arm_distance(arm_middle2, x, y, angle, 0.25))
-
         readings.append(self.get_arm_distance(arm_middle3, x, y, angle, -0.25))
         readings.append(self.get_arm_distance(arm_middle4, x, y, angle, -0.5))
         readings.append(self.get_arm_distance(arm_right, x, y, angle, -1.0))
@@ -260,7 +263,7 @@ class GameState:
         arm_points = []
         # Make an arm. We build it flat because we'll rotate it about the
         # center later.
-        for i in range(1, 40):
+        for i in range(1, 20):
             arm_points.append((distance + x + (spread * i), y))
 
         return arm_points
@@ -283,6 +286,15 @@ class GameState:
 
 if __name__ == "__main__":
     game_state = GameState()
+    prev_state = [[20,20,20,20,20,20]]
     while True:
-        game_state.frame_step((random.randint(0, 2)))
-        time.sleep(0.1)
+        currReward, state = game_state.frame_step((random.randint(0, 2)))
+        time.sleep(1)
+        print "prev State"
+        print prev_state
+        print "current_state:"
+        print state
+        print "------"
+
+        prev_state = state
+
