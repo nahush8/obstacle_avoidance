@@ -71,6 +71,7 @@ if __name__ == "__main__":
 	i = 0
 	game_obj = gameEngine.GameState()
 	gp_obj = gp_prediction()
+	sum_of_reward_per_epoch = 0
 	prev_state = [[20,20,20,20,20,20]]
 	next_state = [[20,20,20,20,20,20]]
 	while True:
@@ -83,6 +84,9 @@ if __name__ == "__main__":
 		prev_state = next_state
 		record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		#print len(record)
+		sum_of_reward_per_epoch += curr_reward
 		if curr_reward == -500:
 			gp_obj.gpq(record)
+			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
+			sum_of_reward_per_epoch = 0
 		i+= 1
