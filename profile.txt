@@ -1,0 +1,69 @@
+Timer unit: 1e-06 s
+
+Total time: 38937.4 s
+File: gpq.py
+Function: findMax at line 26
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    26                                           	@profile
+    27                                           	def findMax(self,gp,next_state):
+    28     60762        34599      0.6      0.0  		tempMu = 0
+    29     60762        28677      0.5      0.0  		arrayList = []
+    30    182286       113658      0.6      0.0  		for x in (0,2):
+    31    121524       121017      1.0      0.0  			test = next_state + [x]
+    32    121524        69796      0.6      0.0  			arrayList.append(test)
+    33     60762       505835      8.3      0.0  		arrayList = np.array(arrayList)
+    34     60762  38935804029 640792.0    100.0  		tempMu,sigma = self.gp.predict(arrayList, return_std=True, return_cov=False) 
+    35                                           
+    36     60761       748720     12.3      0.0  		return max(tempMu)
+
+Total time: 46950.6 s
+File: gpq.py
+Function: gpq at line 38
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    38                                           	@profile
+    39                                           	def gpq(self,record):
+    40        91          193      2.1      0.0  		inputX = []
+    41        91           62      0.7      0.0  		outputY = []
+    42                                           
+    43                                           		
+    44     60852        77749      1.3      0.0  		for elements in record:
+    45                                           			#for element in range (0,len(record)):
+    46     60762       175034      2.9      0.0  			inputX.append(elements[0] + [elements[1]])
+    47     60762  38938778721 640841.0     82.9  			outputY.append((elements[2] +self.findMax(self.gp,elements[3])))
+    48                                           			#print inputX
+    49                                           		#print outputY
+    50        90        46374    515.3      0.0  		dX = np.array(inputX)
+    51                                           		#print outputY
+    52        90         4478     49.8      0.0  		tX = np.array(outputY)
+    53                                           		#st = time.time()
+    54        90   8011540694 89017118.8     17.1  		self.gp.fit(dX,tX)
+
+Total time: 667.693 s
+File: gpq.py
+Function: choose_action at line 56
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    56                                           	@profile
+    57                                           	def choose_action(self,next_state):
+    58      1514         3317      2.2      0.0  		tempMu = 0
+    59      1514         1337      0.9      0.0  		arrayList = []
+    60      1514          891      0.6      0.0  		listMu = []
+    61      1514          777      0.5      0.0  		action_value = 0
+    62      4542         3809      0.8      0.0  		for x in (0,2):
+    63      3028         4094      1.4      0.0  			test = next_state + [x]
+    64      3028         3229      1.1      0.0  			arrayList.append(test)
+    65      1514        22343     14.8      0.0  		arrayList = np.array(arrayList)
+    66      1514    667623034 440966.3    100.0  		tempMu,sigma = self.gp.predict(arrayList, return_std=True, return_cov=False) 
+    67      1514        18804     12.4      0.0  		listMu = list(tempMu)
+    68      1514         5695      3.8      0.0  		maxIndex  = listMu.index(max(listMu))
+    69      1514         3589      2.4      0.0  		tempList = arrayList[maxIndex]
+    70                                           		#print tempList
+    71      1514         1495      1.0      0.0  		action_value = tempList[6]
+    72                                           		#print action_value 
+    73      1514          671      0.4      0.0  		return action_value
+

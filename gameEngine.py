@@ -157,12 +157,14 @@ class GameState:
     def move_obstacles(self):
         # Randomly move obstacles around.
         for obstacle in self.obstacles:
-            speed = random.randint(1, 5)
+            #speed = random.randint(1, 5)
+            speed = 0
             direction = Vec2d(1, 0).rotated(self.car_body.angle + random.randint(-2, 2))
             obstacle.velocity = speed * direction
 
     def move_cat(self):
-        speed = random.randint(20, 200)
+        #speed = random.randint(20, 200)
+        speed = 0 
         self.cat_body.angle -= random.randint(-1, 1)
         direction = Vec2d(1, 0).rotated(self.cat_body.angle)
         self.cat_body.velocity = speed * direction
@@ -180,6 +182,7 @@ class GameState:
         while self.crashed:
             # Go backwards.
             self.car_body.velocity = -100 * driving_direction
+            #self.car_body.position = 200,200
             self.crashed = False
             for i in range(10):
                 self.car_body.angle += .2  # Turn a little.
