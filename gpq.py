@@ -19,7 +19,7 @@ plt.ion()
 class gp_prediction():
 	def __init__(self):
 
-		self.kernel = C(1.0, (1e-3, 1e3)) * RBF(10, (1e-1, 1e1)) #C is a constant kernel and RBF is the squared exp kernel.
+		self.kernel = C(1.0, (1e-3, 1e3)) * RBF([1,1,1,1,1,1,1], (1e-1, 1e1)) #C is a constant kernel and RBF is the squared exp kernel.
 		
 		self.gp = GaussianProcessRegressor(kernel=self.kernel,optimizer='fmin_l_bfgs_b' ,n_restarts_optimizer=9,alpha=1e-2)
 
@@ -87,7 +87,6 @@ if __name__ == "__main__":
 			randomNumber = random.random()
 			if randomNumber >= epsilon:
 				action = gp_obj.choose_action(next_state.tolist()[0])
-				print action
 			else:
 				action = random.randint(0, 2)
 		
@@ -95,13 +94,17 @@ if __name__ == "__main__":
 			action = random.randint(0, 2)
 
 		curr_reward, next_state = game_obj.frame_step(action)
-		#time.sleep(0.1)
-		record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
+		#time.sleep(0.2)
+		newRecord = [prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]]
+		if newRecord not in record:
+			record.append(newRecord)
+		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
 		#print len(record)
 		sum_of_reward_per_epoch += curr_reward
 		if curr_reward == -500:
 			gp_obj.gpq(record)
+			print len(record)
 			plt.scatter(j,sum_of_reward_per_epoch)
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
