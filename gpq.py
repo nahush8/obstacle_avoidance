@@ -18,8 +18,8 @@ plt.ion()
 
 class gp_prediction():
 	def __init__(self):
-
-		self.kernel = C(1.0, (1e-3, 1e3)) * RBF([1,1,1,1,1,1,1], (1e-1, 1e1)) #C is a constant kernel and RBF is the squared exp kernel.
+		self.rbf_init_length_scale = np.array([1,1,1,1,1,1,1])
+		self.kernel = C(1.0, (1e-3, 1e3)) * RBF(self.rbf_init_length_scale.shape, (1e-1, 1e1)) #C is a constant kernel and RBF is the squared exp kernel.
 		
 		self.gp = GaussianProcessRegressor(kernel=self.kernel,optimizer='fmin_l_bfgs_b' ,n_restarts_optimizer=9,alpha=1e-2)
 
