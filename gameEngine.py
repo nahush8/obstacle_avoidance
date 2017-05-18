@@ -181,8 +181,8 @@ class GameState:
         """
         while self.crashed:
             # Go backwards.
-            self.car_body.velocity = -100 * driving_direction
-            #self.car_body.position = 200,200
+            #self.car_body.velocity = -100 * driving_direction
+            self.car_body.position = 200,200
             self.crashed = False
             for i in range(10):
                 self.car_body.angle += .2  # Turn a little.

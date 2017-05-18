@@ -11,10 +11,10 @@ import matplotlib.pyplot as plt
 import pickle
 import time
 import gameEngine
-import matplotlib.pyplot as plt
+import plotting
 
 record = []
-plt.ion()
+#plt.ion()
 
 class gp_prediction():
 	def __init__(self):
@@ -38,14 +38,13 @@ class gp_prediction():
 	def gpq(self,record):
 		inputX = []
 		outputY = []
-
 		
 		for elements in record:
 			#for element in range (0,len(record)):
 			inputX.append(elements[0] + [elements[1]])
 			outputY.append((elements[2] +self.findMax(elements[3])))
 			#print inputX
-		#print outputY
+
 		dX = np.array(inputX)
 		#print outputY
 		tX = np.array(outputY)
@@ -76,8 +75,10 @@ if __name__ == "__main__":
 	i = 0
 	j = 0
 	epsilon = 0.1
+	prev_length_of_record = 0
 	game_obj = gameEngine.GameState()
 	gp_obj = gp_prediction()
+	plot_obj = plotting.plot_class()
 	sum_of_reward_per_epoch = 0
 	prev_state = [20,20,20,20,20,20]
 	prev_state = np.array([prev_state])
@@ -88,8 +89,7 @@ if __name__ == "__main__":
 			if randomNumber >= epsilon:
 				action = gp_obj.choose_action(next_state.tolist()[0])
 			else:
-				action = random.randint(0, 2)
-		
+				action = random.randint(0, 2)		
 		elif i == 0:
 			action = random.randint(0, 2)
 
@@ -100,14 +100,24 @@ if __name__ == "__main__":
 			record.append(newRecord)
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
+	
 		#print len(record)
 		sum_of_reward_per_epoch += curr_reward
+		if abs(len(record) - prev_length_of_record) > 200:
+			prev_length_of_record = len(record)
+			gp_obj.gpq(record)
+			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
+			sum_of_reward_per_epoch = 0
+		'''
 		if curr_reward == -500:
 			gp_obj.gpq(record)
 			print len(record)
-			plt.scatter(j,sum_of_reward_per_epoch)
+			#plot_obj.plotting(record)
+			#plt.scatter(j,sum_of_reward_per_epoch)
+			#for element in range (0,len(record)):
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
 			j += 1
+		'''
 		i+= 1
-		plt.pause(0.05)
+		#plt.pause(0.05)
