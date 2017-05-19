@@ -14,12 +14,12 @@ import gameEngine
 import plotting
 
 record = []
-#plt.ion()
+plt.ion()
 
 class gp_prediction():
 	def __init__(self):
 		self.rbf_init_length_scale = np.array([1,1,1,1,1,1,1])
-		self.kernel = C(1.0, (1e-3, 1e3)) * RBF(self.rbf_init_length_scale.shape, (1e-1, 1e1)) #C is a constant kernel and RBF is the squared exp kernel.
+		self.kernel = C(1.0, (1e-3, 1e3)) * RBF(self.rbf_init_length_scale.shape, (1e-6, 1e6)) #C is a constant kernel and RBF is the squared exp kernel.
 		
 		self.gp = GaussianProcessRegressor(kernel=self.kernel,optimizer='fmin_l_bfgs_b' ,n_restarts_optimizer=9,alpha=1e-2)
 
@@ -74,7 +74,7 @@ class gp_prediction():
 if __name__ == "__main__":
 	i = 0
 	j = 0
-	epsilon = 0.1
+	epsilon = 0.3
 	prev_length_of_record = 0
 	game_obj = gameEngine.GameState()
 	gp_obj = gp_prediction()
@@ -103,11 +103,17 @@ if __name__ == "__main__":
 	
 		#print len(record)
 		sum_of_reward_per_epoch += curr_reward
-		if abs(len(record) - prev_length_of_record) > 200:
+		if abs(len(record) - prev_length_of_record) > 50:
 			prev_length_of_record = len(record)
-			gp_obj.gpq(record)
+			plt.scatter(j,sum_of_reward_per_epoch)
+			#plot_obj.plotting(record)
+			if len(record) > 600:
+				epsilon = 0.1
+			if len(record) < 800:	
+				gp_obj.gpq(record)
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
+			j += 1
 		'''
 		if curr_reward == -500:
 			gp_obj.gpq(record)
@@ -117,7 +123,7 @@ if __name__ == "__main__":
 			#for element in range (0,len(record)):
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
-			j += 1
+			
 		'''
 		i+= 1
-		#plt.pause(0.05)
+		plt.pause(0.05)
