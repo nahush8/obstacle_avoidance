@@ -193,7 +193,7 @@ class GameState:
                 self.space.debug_draw(options)
                 self.space.step(1./10)
                 if draw_screen:
-                    pygame.display.flip()
+                   pygame.display.flip()
                 clock.tick()
 
     def sum_readings(self, readings):

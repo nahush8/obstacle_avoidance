@@ -19,7 +19,7 @@ plt.ion()
 class gp_prediction():
 	def __init__(self):
 		self.rbf_init_length_scale = np.array([1,1,1,1,1,1,1])
-		self.kernel = C(1.0, (1e-3, 1e3)) * RBF(self.rbf_init_length_scale.shape, (1e-6, 1e6)) #C is a constant kernel and RBF is the squared exp kernel.
+		self.kernel = C(1.0, (1e-3, 1e3)) * RBF(self.rbf_init_length_scale.shape, (1e-3, 1e3)) #C is a constant kernel and RBF is the squared exp kernel.
 		
 		self.gp = GaussianProcessRegressor(kernel=self.kernel,optimizer='fmin_l_bfgs_b' ,n_restarts_optimizer=9,alpha=1e-2)
 
@@ -74,7 +74,7 @@ class gp_prediction():
 if __name__ == "__main__":
 	i = 0
 	j = 0
-	epsilon = 0.2
+	epsilon = 0.1
 	prev_length_of_record = 0
 	game_obj = gameEngine.GameState()
 	gp_obj = gp_prediction()
@@ -101,43 +101,25 @@ if __name__ == "__main__":
 			record.append(newRecord)
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
-
+		if len(record) > 800:
+			epsilon = 0.05
 		#print len(record)
 		sum_of_reward_per_epoch += curr_reward
-		if len(record) < 800:
-			if abs(len(record) - prev_length_of_record) > 50:
-				prev_length_of_record = len(record)
-				plt.scatter(j,sum_of_reward_per_epoch)
+		if abs(len(record) - prev_length_of_record) > 100:
+			prev_length_of_record = len(record)
+			plt.scatter(j,sum_of_reward_per_epoch)
 
-				with open(timestr, 'a') as fp:
-					fp.write(str(sum_of_reward_per_epoch) + '\n')
-					fp.flush()
-				fp.close()
-				#plot_obj.plotting(record)
+			with open(timestr, 'a') as fp:
+				fp.write(str(sum_of_reward_per_epoch) + '\n')
+				fp.flush()
+			fp.close()
+			#plot_obj.plotting(record)
+			if len(record) < 1200:
 				gp_obj.gpq(record)
-				print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
-				sum_of_reward_per_epoch = 0
-				j += 1
-		else:
-			if len(record) > 1200:
-				epsilon = 0.05
-			else:
-				epsilon = 0.1
-
-			if abs(len(record) - prev_length_of_record) > 100:
-				prev_length_of_record = len(record)
-				plt.scatter(j,sum_of_reward_per_epoch)
-
-				with open(timestr, 'a') as fp:
-					fp.write(str(sum_of_reward_per_epoch)+'\n')
-					fp.flush()
-				fp.close()
-				#plot_obj.plotting(record)
-				if len(record) < 1200:
-					gp_obj.gpq(record)
-				print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
-				sum_of_reward_per_epoch = 0
-				j += 1
+			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
+			sum_of_reward_per_epoch = 0
+			j += 1
+			#plot_obj.plotting(record)
 		'''
 		if curr_reward == -500:
 			gp_obj.gpq(record)
