@@ -89,7 +89,7 @@ if __name__ == "__main__":
 	next_state = [[20,20,20,20,20,20]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
 	'''
-	while len(record) < 1000:
+	while len(record) < 500:
 		#if i != 0:
 			#randomNumber = random.random()
 			#if randomNumber >= epsilon:
