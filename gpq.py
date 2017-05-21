@@ -22,10 +22,12 @@ class gp_prediction():
 		self.kernel = C(1.0, (1e-3, 1e3)) * RBF(self.rbf_init_length_scale.shape, (1e-3, 1e3)) #C is a constant kernel and RBF is the squared exp kernel.
 		
 		self.gp = GaussianProcessRegressor(kernel=self.kernel,optimizer='fmin_l_bfgs_b' ,n_restarts_optimizer=9,alpha=1e-2)
+		self.gamma = 0.8
 
+	def set_gp(self,gp):
+		self.gp = gp
 	#@profile
 	def findMax(self,next_state):
-		tempMu = 0
 		arrayList = []
 		for x in (0,2):
 			test = next_state + [x]
@@ -42,7 +44,7 @@ class gp_prediction():
 		for elements in record:
 			#for element in range (0,len(record)):
 			inputX.append(elements[0] + [elements[1]])
-			outputY.append((elements[2] +self.findMax(elements[3])))
+			outputY.append((elements[2] + self.gamma * self.findMax(elements[3])))
 			#print inputX
 
 		dX = np.array(inputX)
@@ -51,7 +53,9 @@ class gp_prediction():
 		#st = time.time()
 		print "DOING GP FIT"
 		self.gp.fit(dX,tX)
-
+		with open('gp', 'wb') as fp:
+			pickle.dump(self.gp, fp)
+		fp.close()
 	#@profile
 	def choose_action(self,next_state):
 		tempMu = 0
@@ -84,15 +88,16 @@ if __name__ == "__main__":
 	prev_state = np.array([prev_state])
 	next_state = [[20,20,20,20,20,20]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
-	while True:
-		if i != 0:
-			randomNumber = random.random()
-			if randomNumber >= epsilon:
-				action = gp_obj.choose_action(next_state.tolist()[0])
-			else:
-				action = random.randint(0, 2)		
-		elif i == 0:
-			action = random.randint(0, 2)
+	'''
+	while len(record) < 1000:
+		#if i != 0:
+			#randomNumber = random.random()
+			#if randomNumber >= epsilon:
+			#	action = gp_obj.choose_action(next_state.tolist()[0])
+			#else:
+			#	action = random.randint(0, 2)		
+		#elif i == 0:
+		action = random.randint(0, 2)
 
 		curr_reward, next_state = game_obj.frame_step(action)
 		#time.sleep(0.2)
@@ -101,12 +106,23 @@ if __name__ == "__main__":
 			record.append(newRecord)
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
-		if len(record) > 800:
-			epsilon = 0.05
-		#print len(record)
+
+	gp_obj.gpq(record)
+	'''
+	
+	with open ('gp', 'rb') as fp:
+			gp = pickle.load(fp)
+	gp_obj.set_gp(gp)
+	while True:
+		if i != 0:
+			action = gp_obj.choose_action(next_state.tolist()[0])
+		else:
+			action = random.randint(0, 2)
+		curr_reward, next_state = game_obj.frame_step(action)
+		prev_state = next_state
 		sum_of_reward_per_epoch += curr_reward
-		if abs(len(record) - prev_length_of_record) > 100:
-			prev_length_of_record = len(record)
+		if abs(i - prev_length_of_record) > 100:
+			prev_length_of_record = i
 			plt.scatter(j,sum_of_reward_per_epoch)
 
 			with open(timestr, 'a') as fp:
@@ -114,22 +130,10 @@ if __name__ == "__main__":
 				fp.flush()
 			fp.close()
 			#plot_obj.plotting(record)
-			if len(record) < 1200:
-				gp_obj.gpq(record)
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
 			j += 1
 			#plot_obj.plotting(record)
-		'''
-		if curr_reward == -500:
-			gp_obj.gpq(record)
-			print len(record)
-			#plot_obj.plotting(record)
-			#plt.scatter(j,sum_of_reward_per_epoch)
-			#for element in range (0,len(record)):
-			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
-			sum_of_reward_per_epoch = 0
-			
-		'''
-		i+= 1
+		i += 1
 		plt.pause(0.05)
+	

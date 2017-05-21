@@ -34,16 +34,14 @@ class q_class():
 	#@profile
 	def choose_action(self,state_x):
 		max_q = 0
+		max_action = 0
 		for a in range(0,2):
 			val = Q.get((tuple(state_x),a),0)
 			if val > max_q:
 				max_q = val
+				max_action = a
 
-		try:
-			action = Q.keys()[Q.values().index(max_q)]
-		except:
-			action = random.randint(0,2)
-		return action		
+		return max_action		
 
 if __name__ == "__main__":
 	epsilon = 0.1	
@@ -71,6 +69,7 @@ if __name__ == "__main__":
 
 		curr_reward, next_state = game_obj.frame_step(action)
 		q_obj.updateQ(prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0])
+		print len(Q)
 		prev_state = next_state
 		sum_of_reward_per_epoch += curr_reward
 		if abs(i - prev_length_of_record)> 100:
