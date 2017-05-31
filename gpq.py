@@ -88,8 +88,8 @@ if __name__ == "__main__":
 	prev_state = np.array([prev_state])
 	next_state = [[20,20,20,20,20,20]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
-	'''
-	while len(record) < 500:
+	
+	while len(record) < 1000:
 		#if i != 0:
 			#randomNumber = random.random()
 			#if randomNumber >= epsilon:
@@ -108,9 +108,9 @@ if __name__ == "__main__":
 		prev_state = next_state
 
 	gp_obj.gpq(record)
-	'''
 	
-	with open ('gp_1000', 'rb') as fp:
+	'''
+	with open ('gp', 'rb') as fp:
 			gp = pickle.load(fp)
 	gp_obj.set_gp(gp)
 	while True:
@@ -136,4 +136,4 @@ if __name__ == "__main__":
 			#plot_obj.plotting(record)
 		i += 1
 		plt.pause(0.05)
-	
+	'''

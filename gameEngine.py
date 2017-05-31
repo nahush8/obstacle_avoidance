@@ -73,7 +73,10 @@ class GameState:
 
         # Create a cat.
         self.create_cat()
-
+        '''
+        self.create_incentive()
+        '''
+        
     def create_obstacle(self, x, y, r):
         #c_body = pymunk.Body(pymunk.inf, pymunk.inf)
         c_body = pymunk.Body(1000, pymunk.inf)
@@ -94,6 +97,18 @@ class GameState:
         self.cat_shape.angle = 0.5
         direction = Vec2d(1, 0).rotated(self.cat_body.angle)
         self.space.add(self.cat_body, self.cat_shape)
+    '''
+    def create_incentive(self):
+        inertia = pymunk.moment_for_circle(1, 0, 14, (0, 0))
+        self.incentive_body = pymunk.Body(1, inertia)
+        self.incentive_body.position = 100, height - 200
+        self.incentive_shape = pymunk.Circle(self.incentive_body, 10)
+        self.incentive_shape.color = THECOLORS["blue"]
+        self.incentive_shape.elasticity = 1.0
+        self.incentive_shape.angle = 0.5
+        direction = Vec2d(1, 0).rotated(self.incentive_body.angle)
+        self.space.add(self.incentive_body, self.incentive_shape)
+    '''
 
     def create_car(self, x, y, r):
         inertia = pymunk.moment_for_circle(1, 0, 14, (0, 0))
@@ -268,7 +283,7 @@ class GameState:
         arm_points = []
         # Make an arm. We build it flat because we'll rotate it about the
         # center later.
-        for i in range(1, 20):
+        for i in range(1, 40):
             arm_points.append((distance + x + (spread * i), y))
 
         return arm_points

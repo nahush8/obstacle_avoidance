@@ -61,7 +61,7 @@ if __name__ == "__main__":
 			randomNumber = random.random()
 			if randomNumber >= epsilon:
 				action = q_obj.choose_action(next_state.tolist()[0])
-				print action
+				#print action
 			else:
 				action = random.randint(0, 2)		
 		elif i == 0:
@@ -69,14 +69,14 @@ if __name__ == "__main__":
 
 		curr_reward, next_state = game_obj.frame_step(action)
 		q_obj.updateQ(prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0])
-		print len(Q)
+		#print len(Q)
 		prev_state = next_state
 		sum_of_reward_per_epoch += curr_reward
 		if abs(i - prev_length_of_record)> 100:
 			prev_length_of_record = i
 			plt.scatter(j,sum_of_reward_per_epoch)
 
-			with open(timestr, 'a') as fp:
+			with open(timestr + '_q', 'a') as fp:
 				fp.write(str(sum_of_reward_per_epoch) + '\n')
 				fp.flush()
 			fp.close()

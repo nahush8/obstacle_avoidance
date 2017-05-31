@@ -88,16 +88,16 @@ if __name__ == "__main__":
 	prev_state = np.array([prev_state])
 	next_state = [[20,20,20,20,20,20]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
-	'''
-	while len(record) < 500:
-		#if i != 0:
-			#randomNumber = random.random()
-			#if randomNumber >= epsilon:
-			#	action = gp_obj.choose_action(next_state.tolist()[0])
-			#else:
-			#	action = random.randint(0, 2)		
-		#elif i == 0:
-		action = random.randint(0, 2)
+	
+	while True:
+		if i != 0:
+			randomNumber = random.random()
+			if randomNumber >= epsilon:
+				action = gp_obj.choose_action(next_state.tolist()[0])
+			else:
+				action = random.randint(0, 2)		
+		elif i == 0:
+			action = random.randint(0, 2)
 
 		curr_reward, next_state = game_obj.frame_step(action)
 		#time.sleep(0.2)
@@ -105,30 +105,20 @@ if __name__ == "__main__":
 		if newRecord not in record:
 			record.append(newRecord)
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
-		prev_state = next_state
-
-	gp_obj.gpq(record)
-	'''
-	
-	with open ('gp_1000', 'rb') as fp:
-			gp = pickle.load(fp)
-	gp_obj.set_gp(gp)
-	while True:
-		if i != 0:
-			action = gp_obj.choose_action(next_state.tolist()[0])
-		else:
-			action = random.randint(0, 2)
-		curr_reward, next_state = game_obj.frame_step(action)
+		
 		prev_state = next_state
 		sum_of_reward_per_epoch += curr_reward
-		if abs(i - prev_length_of_record) > 100:
-			prev_length_of_record = i
-			plt.scatter(j,sum_of_reward_per_epoch)
 
-			with open(timestr, 'a') as fp:
+		'''
+
+		if abs(len(record) - prev_length_of_record) > 100:
+			prev_length_of_record = len(record)
+			plt.scatter(j,sum_of_reward_per_epoch) 
+			with open(timestr, 'w') as fp:
 				fp.write(str(sum_of_reward_per_epoch) + '\n')
 				fp.flush()
 			fp.close()
+			gp_obj.gpq(record)
 			#plot_obj.plotting(record)
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
@@ -136,4 +126,4 @@ if __name__ == "__main__":
 			#plot_obj.plotting(record)
 		i += 1
 		plt.pause(0.05)
-	
+		'''
