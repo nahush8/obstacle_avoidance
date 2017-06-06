@@ -18,8 +18,9 @@ plt.ion()
 
 class gp_prediction():
 	def __init__(self):
-		self.rbf_init_length_scale = np.array([1,1,1,1,1,1,1])
-		self.kernel = C(1.0, (1e-3, 1e3)) * RBF(self.rbf_init_length_scale.shape, (1e-3, 1e3)) #C is a constant kernel and RBF is the squared exp kernel.
+		#self.rbf_init_length_scale = np.array([1,1,1,1,1,1,1])
+		self.rbf_init_length_scale = np.array([1,1,1,1])
+		self.kernel = C(1.0, (1e-3, 1e3)) * RBF(self.rbf_init_length_scale.shape, (1e-5, 1e5)) #C is a constant kernel and RBF is the squared exp kernel.
 		
 		self.gp = GaussianProcessRegressor(kernel=self.kernel,optimizer='fmin_l_bfgs_b' ,n_restarts_optimizer=9,alpha=1e-2)
 		self.gamma = 0.8
@@ -84,12 +85,12 @@ if __name__ == "__main__":
 	gp_obj = gp_prediction()
 	plot_obj = plotting.plot_class()
 	sum_of_reward_per_epoch = 0
-	prev_state = [2,2,2,]
+	prev_state = [3,3,3]
 	prev_state = np.array([prev_state])
-	next_state = [[2,2,2]]
+	next_state = [[3,3,3]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
-	
-	while len(record) < 1000:
+	'''
+	while len(record) < 100:
 		#if i != 0:
 			#randomNumber = random.random()
 			#if randomNumber >= epsilon:
@@ -106,11 +107,11 @@ if __name__ == "__main__":
 			record.append(newRecord)
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
-
+		
 	gp_obj.gpq(record)
 	
-	
 	'''
+
 	with open ('gp', 'rb') as fp:
 			gp = pickle.load(fp)
 	gp_obj.set_gp(gp)
@@ -137,4 +138,4 @@ if __name__ == "__main__":
 			#plot_obj.plotting(record)
 		i += 1
 		plt.pause(0.05)
-	'''
+	

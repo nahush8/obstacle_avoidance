@@ -44,17 +44,17 @@ class q_class():
 		return max_action		
 
 if __name__ == "__main__":
-	epsilon = 0.1	
+	epsilon = 0.05	
 	i = 0
 	j = 0
 	prev_length_of_record = 0
 	game_obj = gameEngine.GameState()
 	q_obj = q_class()
-	plot_obj = plotting.plot_class()
+	#plot_obj = plotting.plot_class()
 	sum_of_reward_per_epoch = 0
-	prev_state = [2,2,2]
+	prev_state = [3,3,3]
 	prev_state = np.array([prev_state])
-	next_state = [[2,2,2]]
+	next_state = [[3,3,3]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
 	while True:
 		if i != 0:
@@ -69,12 +69,12 @@ if __name__ == "__main__":
 
 		curr_reward, next_state = game_obj.frame_step(action)
 		q_obj.updateQ(prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0])
-		print Q
 		prev_state = next_state
-		'''
+		
 		sum_of_reward_per_epoch += curr_reward
 		if abs(i - prev_length_of_record)> 100:
 			prev_length_of_record = i
+			'''
 			plt.scatter(j,sum_of_reward_per_epoch)
 
 			with open(timestr + '_q', 'a') as fp:
@@ -84,8 +84,12 @@ if __name__ == "__main__":
 			#plot_obj.plotting(record)
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
+			'''
+			print "========="
+			print sum_of_reward_per_epoch
+			print "========="
+			sum_of_reward_per_epoch = 0
 			j += 1
-			#plot_obj.plotting(record)
 		i+= 1
-		plt.pause(0.05)
-		'''
+		#plt.pause(0.05)
+		

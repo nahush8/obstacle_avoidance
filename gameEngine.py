@@ -197,11 +197,13 @@ class GameState:
         # Car crashed when any reading == 1
         if self.car_is_crashed(readings):
             self.crashed = True
-            reward = -500
+            #reward = -500
+            reward = -50
             self.recover_from_crash(driving_direction)
         else:
             # Higher readings are better, so return the sum.
-            reward = -5 + int(self.sum_readings(readings) / 10)
+            #reward = -5 + int(self.sum_readings(readings) / 10)
+            reward = int(self.sum_readings(readings))
         self.num_steps += 1
         return reward, state
 
@@ -268,15 +270,15 @@ class GameState:
         # Make our arms.
         arm_left = self.make_sonar_arm(x, y)
         arm_middle1 = arm_left
-        arm_middle2 = arm_middle1
-        arm_middle3 = arm_middle2
-        arm_middle4 = arm_middle3
-        arm_right = arm_middle4
+        #arm_middle2 = arm_middle1
+        #arm_middle3 = arm_middle2
+        #arm_middle4 = arm_middle3
+        arm_right = arm_middle1
 
         # Rotate them and get readings.
         readings.append(self.get_arm_distance(arm_left, x, y, angle, 0.75))
         readings.append(self.get_arm_distance(arm_middle1, x, y, angle, 0.0))
-        readings.append(self.get_arm_distance(arm_middle2, x, y, angle, -0.75))
+        readings.append(self.get_arm_distance(arm_right, x, y, angle, -0.75))
         #readings.append(self.get_arm_distance(arm_middle3, x, y, angle, -0.25))
         #readings.append(self.get_arm_distance(arm_middle4, x, y, angle, -0.5))
         #readings.append(self.get_arm_distance(arm_right, x, y, angle, -1.0))
@@ -317,7 +319,7 @@ class GameState:
 
     def make_sonar_arm(self, x, y):
         spread = 10  # Default spread.
-        distance = 5  # Gap before first sensor.
+        distance = 10  # Gap before first sensor.
         arm_points = []
         # Make an arm. We build it flat because we'll rotate it about the
         # center later.
@@ -344,10 +346,10 @@ class GameState:
 
 if __name__ == "__main__":
     game_state = GameState()
-    prev_state = [[20,20,20,20,20,20]]
+    prev_state = [[3,3,3]]
     while True:
         currReward, state = game_state.frame_step((random.randint(0, 2)))
-        time.sleep(1)
+        time.sleep(0.1)
         print "prev State"
         print prev_state
         print "current_state:"
