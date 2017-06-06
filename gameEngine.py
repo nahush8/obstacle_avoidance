@@ -178,8 +178,8 @@ class GameState:
             obstacle.velocity = speed * direction
 
     def move_cat(self):
-        #speed = random.randint(20, 200)
-        speed = random.randint(0, 10)
+        speed = random.randint(20, 200)
+        #speed = random.randint(0, 10)
         #speed = 0 
         self.cat_body.angle -= random.randint(-1, 1)
         direction = Vec2d(1, 0).rotated(self.cat_body.angle)
@@ -283,7 +283,7 @@ class GameState:
         arm_points = []
         # Make an arm. We build it flat because we'll rotate it about the
         # center later.
-        for i in range(1, 40):
+        for i in range(1, 20):
             arm_points.append((distance + x + (spread * i), y))
 
         return arm_points
