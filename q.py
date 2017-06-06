@@ -13,7 +13,7 @@ import time
 import gameEngine
 import plotting
 
-Q = {((19,19,19,19,19,19),0):0}
+Q = {((2,2,2),0):0}
 plt.ion()
 
 class q_class():
@@ -52,9 +52,9 @@ if __name__ == "__main__":
 	q_obj = q_class()
 	plot_obj = plotting.plot_class()
 	sum_of_reward_per_epoch = 0
-	prev_state = [20,20,20,20,20,20]
+	prev_state = [2,2,2]
 	prev_state = np.array([prev_state])
-	next_state = [[20,20,20,20,20,20]]
+	next_state = [[2,2,2]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
 	while True:
 		if i != 0:

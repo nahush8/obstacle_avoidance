@@ -71,7 +71,7 @@ class gp_prediction():
 		maxIndex  = listMu.index(max(listMu))
 		tempList = arrayList[maxIndex]
 		#print tempList
-		action_value = tempList[6]
+		action_value = tempList[3]
 		#print action_value 
 		return action_value
 
@@ -84,11 +84,11 @@ if __name__ == "__main__":
 	gp_obj = gp_prediction()
 	plot_obj = plotting.plot_class()
 	sum_of_reward_per_epoch = 0
-	prev_state = [20,20,20,20,20,20]
+	prev_state = [2,2,2,]
 	prev_state = np.array([prev_state])
-	next_state = [[20,20,20,20,20,20]]
+	next_state = [[2,2,2]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
-	'''
+	
 	while len(record) < 1000:
 		#if i != 0:
 			#randomNumber = random.random()
@@ -108,6 +108,7 @@ if __name__ == "__main__":
 		prev_state = next_state
 
 	gp_obj.gpq(record)
+	
 	
 	'''
 	with open ('gp', 'rb') as fp:
@@ -136,4 +137,4 @@ if __name__ == "__main__":
 			#plot_obj.plotting(record)
 		i += 1
 		plt.pause(0.05)
-	
+	'''
