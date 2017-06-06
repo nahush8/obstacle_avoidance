@@ -69,8 +69,9 @@ if __name__ == "__main__":
 
 		curr_reward, next_state = game_obj.frame_step(action)
 		q_obj.updateQ(prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0])
-		#print len(Q)
+		print Q
 		prev_state = next_state
+		'''
 		sum_of_reward_per_epoch += curr_reward
 		if abs(i - prev_length_of_record)> 100:
 			prev_length_of_record = i
@@ -87,3 +88,4 @@ if __name__ == "__main__":
 			#plot_obj.plotting(record)
 		i+= 1
 		plt.pause(0.05)
+		'''
