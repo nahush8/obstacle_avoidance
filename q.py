@@ -13,31 +13,36 @@ import time
 import gameEngine
 import plotting
 
-LASER_MAX_VAL = 2
+LASER_MAX_VAL = 10
+numOfActions = 4
+MAX_INIT_Q = -float("inf")
 Q = {((LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL),0):0}
+count = {((LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL),0):0}
 plt.ion()
 
 class q_class():
 	def __init__(self):
-		self.alpha = 1
-		self.gamma = 0.8
+		self.alpha = 0.0
+		self.gamma = 1
 	#@profile
 	def updateQ(self,state_x,action,reward,state_y):
 		q_sa = Q.get((tuple(state_x),action), 0)
-		max_q = 0
-		for a in range(0,3):
+		max_q = MAX_INIT_Q
+		for a in range(0,numOfActions):
 			val = Q.get((tuple(state_y),a),0)
 			if val > max_q:
 				max_q = val
-		newQ = q_sa + self.alpha * (reward + self.gamma * max_q - q_sa)
+		count[(tuple(state_x),action)] = count.get((tuple(state_x),action),0) + 1
+		alpha = 1/count[(tuple(state_x),action)]
+		newQ = q_sa + alpha * (reward + self.gamma * max_q - q_sa)
 		Q[(tuple(state_x),action)] = newQ
 
 	#@profile
 	def choose_action(self,state_x):
-		max_q = 0
+		max_q = MAX_INIT_Q
 		max_action = 0
-		for a in range(0,3):
-			val = Q.get((tuple(state_x),a),0)
+		for a in range(0,numOfActions):
+			val = Q.get((tuple(state_x),a),float("inf"))
 			if val > max_q:
 				max_q = val
 				max_action = a
@@ -59,7 +64,7 @@ if __name__ == "__main__":
 	prev_state = np.array([prev_state])
 	next_state = [[LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
-	heat = np.zeros((8, 3))
+	heat = np.zeros((8, numOfActions))
 	while True:
 		if i != 0:
 			randomNumber = random.random()
@@ -67,23 +72,39 @@ if __name__ == "__main__":
 				action = q_obj.choose_action(next_state.tolist()[0])
 				#print action
 			else:
-				action = random.randint(0, 2)		
+				action = random.randint(0, numOfActions-1)		
 		elif i == 0:
-			action = random.randint(0, 2)
+			action = random.randint(0, numOfActions-1)
 
 		curr_reward, next_state = game_obj.frame_step(action)
 		q_obj.updateQ(prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0])
 		prev_state = next_state
-
+		'''
 		if i%200 == 0:
 			for s in states:
-				for a in range(0,3):
+				for a in range(0,numOfActions):
 					heat[itr][a] = Q.get((tuple(s),a),0)
 				itr+=1
 			itr = 0
 			plt.imshow(heat, cmap='coolwarm', interpolation='nearest')
 			plt.pause(0.5)
+		'''
+		print Q
+		print "========="
+		print "========="
+		print count
+		print "\n\n\n"
 		i+= 1
+		#time.sleep(0.5)
+		'''
+		for s in states:
+				for a in range(0,3):
+					heat[itr][a] = Q.get((tuple(s),a),0)
+				itr+=1
+		itr = 0
+		plt.imshow(heat, cmap='coolwarm', interpolation='nearest')
+		plt.pause(0.05)
+		'''
 		'''
 		sum_of_reward_per_epoch += curr_reward
 		

@@ -13,6 +13,9 @@ import time
 import gameEngine
 import plotting
 
+LASER_MAX_VAL = 10
+numOfActions = 4
+numOfLasers = 3
 record = []
 plt.ion()
 
@@ -30,7 +33,7 @@ class gp_prediction():
 	#@profile
 	def findMax(self,next_state):
 		arrayList = []
-		for x in (0,2):
+		for x in range(0,numOfActions):
 			test = next_state + [x]
 			arrayList.append(test)
 		arrayList = np.array(arrayList)
@@ -63,7 +66,7 @@ class gp_prediction():
 		arrayList = []
 		listMu = []
 		action_value = 0
-		for x in (0,2):
+		for x in range(0,numOfActions):
 			test = next_state + [x]
 			arrayList.append(test)
 		arrayList = np.array(arrayList)
@@ -72,7 +75,7 @@ class gp_prediction():
 		maxIndex  = listMu.index(max(listMu))
 		tempList = arrayList[maxIndex]
 		#print tempList
-		action_value = tempList[3]
+		action_value = tempList[numOfLasers]
 		#print action_value 
 		return action_value
 
@@ -85,20 +88,20 @@ if __name__ == "__main__":
 	gp_obj = gp_prediction()
 	plot_obj = plotting.plot_class()
 	sum_of_reward_per_epoch = 0
-	prev_state = [3,3,3]
+	prev_state = [LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]
 	prev_state = np.array([prev_state])
-	next_state = [[3,3,3]]
+	next_state = [[LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
-	'''
-	while len(record) < 100:
-		#if i != 0:
-			#randomNumber = random.random()
-			#if randomNumber >= epsilon:
-			#	action = gp_obj.choose_action(next_state.tolist()[0])
-			#else:
-			#	action = random.randint(0, 2)		
-		#elif i == 0:
-		action = random.randint(0, 2)
+	
+	while True:
+		if i != 0:
+			randomNumber = random.random()
+			if randomNumber >= epsilon:
+				action = gp_obj.choose_action(next_state.tolist()[0])
+			else:
+				action = random.randint(0, numOfActions)		
+		elif i == 0:
+			action = random.randint(0, numOfActions-1)
 
 		curr_reward, next_state = game_obj.frame_step(action)
 		#time.sleep(0.2)
@@ -107,11 +110,29 @@ if __name__ == "__main__":
 			record.append(newRecord)
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
-		
-	gp_obj.gpq(record)
+		if abs(len(record) - prev_length_of_record) > 200:
+			prev_length_of_record = len(record)
+			'''
+			plt.scatter(j,sum_of_reward_per_epoch)
+
+			with open(timestr, 'a') as fp:
+				fp.write(str(sum_of_reward_per_epoch) + '\n')
+				fp.flush()
+			fp.close()
+			#plot_obj.plotting(record)
+			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
+			sum_of_reward_per_epoch = 0
+			j += 1
+			#plot_obj.plotting(record)
+			'''
+			gp_obj.gpq(record)
+		i += 1
+		#plt.pause(0.05)
+
+
+	
 	
 	'''
-
 	with open ('gp', 'rb') as fp:
 			gp = pickle.load(fp)
 	gp_obj.set_gp(gp)
@@ -138,4 +159,4 @@ if __name__ == "__main__":
 			#plot_obj.plotting(record)
 		i += 1
 		plt.pause(0.05)
-	
+	'''

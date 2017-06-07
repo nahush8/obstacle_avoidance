@@ -29,17 +29,17 @@ class GameState:
     def __init__(self):
         # Global-ish.
         self.crashed = False
-        self.car_velocity = 20
-        self.numOflasersData = 2
-        self.spread = 20
-        self.distance = 20
+        self.car_velocity = 50
+        self.numOflasersData = 10
+        self.spread = 10
+        self.distance = 10
 
         # Physics stuff.
         self.space = pymunk.Space()
         self.space.gravity = pymunk.Vec2d(0., 0.)
 
         # Create the car.
-        self.create_car(100, 100, 0.5)
+        self.create_car(150, 150, 0.5)
 
         # Record steps.
         self.num_steps = 0
@@ -118,7 +118,7 @@ class GameState:
         c_body = pymunk.Body(10000, pymunk.inf,body_type=cp.STATIC)
         #vertices = [(200.0,200.0),(700.0,200.0),(700.0,600.0),(200.0,600.0)]
         c_shape = pymunk.Segment(c_body,(x1,y1),(x2,y2),radius=r)
-        c_shape.elasticity = 1.0
+        c_shape.elasticity = 0.0
         #c_body.position = x, y
         c_shape.color = THECOLORS["white"]
         self.space.add(c_body, c_shape)
@@ -154,7 +154,7 @@ class GameState:
         self.car_body.position = x, y
         self.car_shape = pymunk.Circle(self.car_body, 10)
         self.car_shape.color = THECOLORS["green"]
-        self.car_shape.elasticity = 1.0
+        self.car_shape.elasticity = 0.0
         self.car_body.angle = r
         driving_direction = Vec2d(1, 0).rotated(self.car_body.angle)
         #self.car_body.apply_impulse(driving_direction)
@@ -165,8 +165,15 @@ class GameState:
 
         if action == 0:  # Turn left.
             self.car_body.angle -= .2
+            self.car_velocity = 40
         elif action == 1:  # Turn right.
             self.car_body.angle += .2
+            self.car_velocity = 40
+        elif action == 2:  # Turn right.
+            self.car_body.angle += 0.0
+            self.car_velocity = 40
+        elif action == 3:
+            self.car_velocity = -20
         '''
         # Move obstacles.
         if self.num_steps % 100 == 0:
@@ -207,8 +214,8 @@ class GameState:
         else:
             # Higher readings are better, so return the sum.
             #reward = -5 + int(self.sum_readings(readings) / 10)
-            #reward = int(self.sum_readings(readings))
-            reward = 1
+            reward = int(self.sum_readings(readings))
+            #reward = 1
         self.num_steps += 1
         return reward, state
 
@@ -243,11 +250,12 @@ class GameState:
         while self.crashed:
             # Go backwards.
             #self.car_body.velocity = -100 * driving_direction
-            self.car_body.velocity = -self.car_velocity * driving_direction
+            #self.car_body.velocity = -self.car_velocity * driving_direction
             #self.car_body.position = 200,200
             self.crashed = False
+            
             for i in range(10):
-                self.car_body.angle += .2  # Turn a little.
+                #self.car_body.angle += .2  # Turn a little.
                 screen.fill(THECOLORS["red"])  # Red is scary!
                 #draw(screen, self.space)
                 options = pymunk.pygame_util.DrawOptions(screen)
@@ -256,6 +264,7 @@ class GameState:
                 if draw_screen:
                    pygame.display.flip()
                 clock.tick()
+            
 
     def sum_readings(self, readings):
         """Sum the number of non-zero readings."""
