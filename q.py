@@ -13,7 +13,8 @@ import time
 import gameEngine
 import plotting
 
-Q = {((2,2,2),0):0}
+LASER_MAX_VAL = 2
+Q = {((LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL),0):0}
 plt.ion()
 
 class q_class():
@@ -24,7 +25,7 @@ class q_class():
 	def updateQ(self,state_x,action,reward,state_y):
 		q_sa = Q.get((tuple(state_x),action), 0)
 		max_q = 0
-		for a in range(0,2):
+		for a in range(0,3):
 			val = Q.get((tuple(state_y),a),0)
 			if val > max_q:
 				max_q = val
@@ -35,7 +36,7 @@ class q_class():
 	def choose_action(self,state_x):
 		max_q = 0
 		max_action = 0
-		for a in range(0,2):
+		for a in range(0,3):
 			val = Q.get((tuple(state_x),a),0)
 			if val > max_q:
 				max_q = val
@@ -44,18 +45,21 @@ class q_class():
 		return max_action		
 
 if __name__ == "__main__":
-	epsilon = 0.05	
+	epsilon = 0.1
 	i = 0
 	j = 0
+	itr = 0
+	states = [(1,1,1),(1,1,2),(1,2,1),(2,1,1),(1,2,2),(2,2,1),(2,1,2),(2,2,2)]
 	prev_length_of_record = 0
 	game_obj = gameEngine.GameState()
 	q_obj = q_class()
 	#plot_obj = plotting.plot_class()
 	sum_of_reward_per_epoch = 0
-	prev_state = [3,3,3]
+	prev_state = [LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]
 	prev_state = np.array([prev_state])
-	next_state = [[3,3,3]]
+	next_state = [[LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
+	heat = np.zeros((8, 3))
 	while True:
 		if i != 0:
 			randomNumber = random.random()
@@ -70,11 +74,22 @@ if __name__ == "__main__":
 		curr_reward, next_state = game_obj.frame_step(action)
 		q_obj.updateQ(prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0])
 		prev_state = next_state
-		
+
+		if i%200 == 0:
+			for s in states:
+				for a in range(0,3):
+					heat[itr][a] = Q.get((tuple(s),a),0)
+				itr+=1
+			itr = 0
+			plt.imshow(heat, cmap='coolwarm', interpolation='nearest')
+			plt.pause(0.5)
+		i+= 1
+		'''
 		sum_of_reward_per_epoch += curr_reward
+		
 		if abs(i - prev_length_of_record)> 100:
 			prev_length_of_record = i
-			'''
+			
 			plt.scatter(j,sum_of_reward_per_epoch)
 
 			with open(timestr + '_q', 'a') as fp:
@@ -84,12 +99,7 @@ if __name__ == "__main__":
 			#plot_obj.plotting(record)
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
-			'''
-			print "========="
-			print sum_of_reward_per_epoch
-			print "========="
-			sum_of_reward_per_epoch = 0
 			j += 1
 		i+= 1
-		#plt.pause(0.05)
-		
+		plt.pause(0.05)
+		'''

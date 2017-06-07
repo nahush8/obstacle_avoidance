@@ -29,7 +29,10 @@ class GameState:
     def __init__(self):
         # Global-ish.
         self.crashed = False
-
+        self.car_velocity = 20
+        self.numOflasersData = 2
+        self.spread = 20
+        self.distance = 20
 
         # Physics stuff.
         self.space = pymunk.Space()
@@ -176,7 +179,8 @@ class GameState:
         '''
 
         driving_direction = Vec2d(1, 0).rotated(self.car_body.angle)
-        self.car_body.velocity = 100 * driving_direction
+        #self.car_body.velocity = 100 * driving_direction
+        self.car_body.velocity = self.car_velocity * driving_direction
 
         # Update the screen and stuff.
         screen.fill(THECOLORS["black"])
@@ -198,12 +202,13 @@ class GameState:
         if self.car_is_crashed(readings):
             self.crashed = True
             #reward = -500
-            reward = -50
+            reward = -5
             self.recover_from_crash(driving_direction)
         else:
             # Higher readings are better, so return the sum.
             #reward = -5 + int(self.sum_readings(readings) / 10)
-            reward = int(self.sum_readings(readings))
+            #reward = int(self.sum_readings(readings))
+            reward = 1
         self.num_steps += 1
         return reward, state
 
@@ -237,7 +242,8 @@ class GameState:
         """
         while self.crashed:
             # Go backwards.
-            self.car_body.velocity = -100 * driving_direction
+            #self.car_body.velocity = -100 * driving_direction
+            self.car_body.velocity = -self.car_velocity * driving_direction
             #self.car_body.position = 200,200
             self.crashed = False
             for i in range(10):
@@ -318,12 +324,12 @@ class GameState:
         return i
 
     def make_sonar_arm(self, x, y):
-        spread = 10  # Default spread.
-        distance = 10  # Gap before first sensor.
+        spread = self.spread  # Default spread.
+        distance = self.distance  # Gap before first sensor.
         arm_points = []
         # Make an arm. We build it flat because we'll rotate it about the
         # center later.
-        for i in range(0, 3):
+        for i in range(0, self.numOflasersData):
             arm_points.append((distance + x + (spread * i), y))
 
         return arm_points
@@ -346,10 +352,10 @@ class GameState:
 
 if __name__ == "__main__":
     game_state = GameState()
-    prev_state = [[3,3,3]]
+    prev_state = [[2,2,2]]
     while True:
         currReward, state = game_state.frame_step((random.randint(0, 2)))
-        time.sleep(0.1)
+        time.sleep(0.5)
         print "prev State"
         print prev_state
         print "current_state:"
