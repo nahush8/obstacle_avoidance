@@ -17,7 +17,7 @@ LASER_MAX_VAL = 10
 numOfActions = 4
 numOfLasers = 3
 record = []
-plt.ion()
+#plt.ion()
 
 class gp_prediction():
 	def __init__(self):
@@ -80,19 +80,22 @@ class gp_prediction():
 		return action_value
 
 if __name__ == "__main__":
+
 	i = 0
 	j = 0
+	itr = 0
+	
 	epsilon = 0.1
 	prev_length_of_record = 0
 	game_obj = gameEngine.GameState()
 	gp_obj = gp_prediction()
-	plot_obj = plotting.plot_class()
 	sum_of_reward_per_epoch = 0
 	prev_state = [LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]
 	prev_state = np.array([prev_state])
 	next_state = [[LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
 	
+	'''
 	while True:
 		if i != 0:
 			randomNumber = random.random()
@@ -111,8 +114,7 @@ if __name__ == "__main__":
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
 		if abs(len(record) - prev_length_of_record) > 200:
-			prev_length_of_record = len(record)
-			'''
+			prev_length_of_record = len(record)			
 			plt.scatter(j,sum_of_reward_per_epoch)
 
 			with open(timestr, 'a') as fp:
@@ -124,12 +126,12 @@ if __name__ == "__main__":
 			sum_of_reward_per_epoch = 0
 			j += 1
 			#plot_obj.plotting(record)
-			'''
+			
 			gp_obj.gpq(record)
 		i += 1
 		#plt.pause(0.05)
 
-
+	'''
 	
 	
 	'''
@@ -146,17 +148,57 @@ if __name__ == "__main__":
 		sum_of_reward_per_epoch += curr_reward
 		if abs(i - prev_length_of_record) > 100:
 			prev_length_of_record = i
-			plt.scatter(j,sum_of_reward_per_epoch)
+			#plt.scatter(j,sum_of_reward_per_epoch)
 
-			with open(timestr, 'a') as fp:
-				fp.write(str(sum_of_reward_per_epoch) + '\n')
-				fp.flush()
-			fp.close()
+			#with open(timestr, 'a') as fp:
+			#	fp.write(str(sum_of_reward_per_epoch) + '\n')
+			#	fp.flush()
+			#fp.close()
 			#plot_obj.plotting(record)
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
-			j += 1
+			#j += 1
 			#plot_obj.plotting(record)
 		i += 1
-		plt.pause(0.05)
+		#plt.pause(0.05)
 	'''
+	'''
+	arrayList = []
+	listMu = []
+	heat = np.zeros((1000, 4))
+	
+	print len(states)
+	with open ('gp', 'rb') as fp:
+			gp = pickle.load(fp)
+	print "GP loaded"
+	for s in states:
+		for a in range(0,4):
+			test = s + [a]
+			arrayList.append(test)
+	arrayList = np.array(arrayList)
+	tempMu, sigma = gp.predict(arrayList, return_std=True, return_cov=False) 
+	listMu = list(tempMu)
+	'''
+
+	fig, ax = plt.subplots(figsize=(10,10))  
+	heat = np.zeros((64, 4))
+	with open('listMu', 'rb') as fp:
+		listMu = pickle.load(fp)
+	fp.close()
+	states = []
+	for i in range(1,5):
+		for j in range(1,5):
+			for k in range(1,5):
+				states.append([i,j,k])
+
+	print listMu
+	print len(listMu)
+	for s in states:
+		for a in range(0,4):
+			heat[itr][a] = listMu[itr]
+		itr+=1
+	itr = 0	
+	plt.imshow(heat, cmap='coolwarm', interpolation='nearest')
+	plt.colorbar()
+	plt.show()
+	

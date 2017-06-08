@@ -98,9 +98,9 @@ if __name__ == "__main__":
 		#time.sleep(0.5)
 		'''
 		for s in states:
-				for a in range(0,3):
-					heat[itr][a] = Q.get((tuple(s),a),0)
-				itr+=1
+			for a in range(0,3):
+				heat[itr][a] = Q.get((tuple(s),a),0)
+			itr+=1
 		itr = 0
 		plt.imshow(heat, cmap='coolwarm', interpolation='nearest')
 		plt.pause(0.05)
