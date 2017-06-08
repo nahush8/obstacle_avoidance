@@ -90,9 +90,18 @@ class GameState:
 
         gap = 100
         self.obstacles.append(self.create_obstacle(a4+gap,b4-gap ,a1+gap,b1+gap, 10)) #left vertical
-        self.obstacles.append(self.create_obstacle(a1+gap,b1+gap ,a2-gap,b2+gap, 10)) #bottom horizontal
         self.obstacles.append(self.create_obstacle(a2-gap,b2+gap ,a3-gap,b3-gap, 10)) #right vertical
-        self.obstacles.append(self.create_obstacle(a3-gap,b3-gap ,a4+gap,b4-gap, 10)) #top horizontal
+
+        self.obstacles.append(self.create_obstacle(a1+gap,b1+gap ,a1+gap+200,b2+gap, 10)) #bottom horizontal
+        self.obstacles.append(self.create_obstacle(a1+gap+400,b1+gap ,a2-gap,b2+gap, 10)) #bottom horizontal
+        #self.obstacles.append(self.create_obstacle(a2/3+gap,b2+gap ,a3+gap,b1+gap, 10)) #left vertical
+        self.obstacles.append(self.create_obstacle(a1+gap,b4-gap ,a1+gap+200,b3-gap, 10)) #bottom horizontal
+        self.obstacles.append(self.create_obstacle(a1+gap+400,b4-gap ,a2-gap,b3-gap, 10)) #bottom horizontal
+
+        self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap ,a1+gap+200,b4-gap, 10))
+        self.obstacles.append(self.create_obstacle(a1+gap+400,b2+gap ,a1+gap+400,b3-gap, 10))
+        self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap ,a1+gap+400,b2+gap, 10)) #top horizontal
+        self.obstacles.append(self.create_obstacle(a2-gap,b3-gap ,a2,b3-gap, 10))
         #self.obstacles.append(self.create_obstacle(700, 200, 125))
         #self.obstacles.append(self.create_obstacle(600, 600, 35))
 

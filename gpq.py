@@ -134,7 +134,7 @@ if __name__ == "__main__":
 	'''
 	
 	
-	'''
+	
 	with open ('gp', 'rb') as fp:
 			gp = pickle.load(fp)
 	gp_obj.set_gp(gp)
@@ -142,7 +142,7 @@ if __name__ == "__main__":
 		if i != 0:
 			action = gp_obj.choose_action(next_state.tolist()[0])
 		else:
-			action = random.randint(0, 2)
+			action = random.randint(0, 3)
 		curr_reward, next_state = game_obj.frame_step(action)
 		prev_state = next_state
 		sum_of_reward_per_epoch += curr_reward
@@ -160,8 +160,7 @@ if __name__ == "__main__":
 			#j += 1
 			#plot_obj.plotting(record)
 		i += 1
-		#plt.pause(0.05)
-	'''
+		#plt.pause(0.05)	
 	'''
 	arrayList = []
 	listMu = []
@@ -179,7 +178,7 @@ if __name__ == "__main__":
 	tempMu, sigma = gp.predict(arrayList, return_std=True, return_cov=False) 
 	listMu = list(tempMu)
 	'''
-
+	'''
 	fig, ax = plt.subplots(figsize=(10,10))  
 	heat = np.zeros((64, 4))
 	with open('listMu', 'rb') as fp:
@@ -201,4 +200,4 @@ if __name__ == "__main__":
 	plt.imshow(heat, cmap='coolwarm', interpolation='nearest')
 	plt.colorbar()
 	plt.show()
-	
+	'''
