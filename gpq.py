@@ -179,26 +179,42 @@ if __name__ == "__main__":
 	tempMu, sigma = gp.predict(arrayList, return_std=True, return_cov=False) 
 	listMu = list(tempMu)
 	'''
-
-	fig, ax = plt.subplots(figsize=(10,10))  
-	heat = np.zeros((64, 4))
+	#f, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, sharex='col', sharey='row')
+	heat = np.zeros((1000, 4))
 	with open('listMu', 'rb') as fp:
 		listMu = pickle.load(fp)
 	fp.close()
 	states = []
-	for i in range(1,5):
-		for j in range(1,5):
-			for k in range(1,5):
+	for i in range(1,11):
+		for j in range(1,11):
+			for k in range(1,11):
 				states.append([i,j,k])
-
-	print listMu
-	print len(listMu)
 	for s in states:
-		for a in range(0,4):
+		for a in range(0,numOfActions):
 			heat[itr][a] = listMu[itr]
 		itr+=1
 	itr = 0	
-	plt.imshow(heat, cmap='coolwarm', interpolation='nearest')
+	plt.imshow(heat, cmap='coolwarm', interpolation='nearest',aspect='auto')
+	
+	'''
+	for s in states:
+		heat[itr][1] = listMu[itr]
+		itr+=1
+	itr = 0	
+	ax2.imshow(heat, cmap='coolwarm', interpolation='nearest',aspect='auto')
+	for s in states:
+		heat[itr][2] = listMu[itr]
+		itr+=1
+	itr = 0	
+	ax3.imshow(heat, cmap='coolwarm', interpolation='nearest',aspect='auto')
+	for s in states:
+		heat[itr][3] = listMu[itr]
+		itr+=1
+	itr = 0	
+
+	ax4.imshow(heat, cmap='coolwarm', interpolation='nearest',aspect='auto')
+	
+	'''
 	plt.colorbar()
 	plt.show()
 	
