@@ -17,6 +17,7 @@ LASER_MAX_VAL = 10
 numOfActions = 4
 numOfLasers = 3
 record = []
+cache = {(1,1,1):2}
 #plt.ion()
 
 class gp_prediction():
@@ -66,18 +67,23 @@ class gp_prediction():
 		arrayList = []
 		listMu = []
 		action_value = 0
-		for x in range(0,numOfActions):
-			test = next_state + [x]
-			arrayList.append(test)
-		arrayList = np.array(arrayList)
-		tempMu,sigma = self.gp.predict(arrayList, return_std=True, return_cov=False) 
-		listMu = list(tempMu)
-		maxIndex  = listMu.index(max(listMu))
-		tempList = arrayList[maxIndex]
-		#print tempList
-		action_value = tempList[numOfLasers]
-		#print action_value 
-		return action_value
+		ret = cache.get(tuple(next_state),-999)
+		if ret != -999:
+			return ret
+		else:
+			for x in range(0,numOfActions):
+				test = next_state + [x]
+				arrayList.append(test)
+			arrayList = np.array(arrayList)
+			tempMu,sigma = self.gp.predict(arrayList, return_std=True, return_cov=False) 
+			listMu = list(tempMu)
+			maxIndex  = listMu.index(max(listMu))
+			tempList = arrayList[maxIndex]
+			#print tempList
+			action_value = tempList[numOfLasers]
+			#print action_value
+			cache[tuple(next_state)] = action_value
+			return action_value
 
 if __name__ == "__main__":
 

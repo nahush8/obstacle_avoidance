@@ -101,7 +101,7 @@ class GameState:
         self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap ,a1+gap+200,b4-gap, 10))
         self.obstacles.append(self.create_obstacle(a1+gap+400,b2+gap ,a1+gap+400,b3-gap, 10))
         self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap ,a1+gap+400,b2+gap, 10)) #top horizontal
-        self.obstacles.append(self.create_obstacle(a2-gap,b3-gap ,a2,b3-gap, 10))
+        #self.obstacles.append(self.create_obstacle(a2-gap,b3-gap ,a2,b3-gap, 10))
         #self.obstacles.append(self.create_obstacle(700, 200, 125))
         #self.obstacles.append(self.create_obstacle(600, 600, 35))
 
