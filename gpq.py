@@ -102,7 +102,7 @@ if __name__ == "__main__":
 	prev_state = np.array([prev_state])
 	next_state = [[LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
-	
+	'''
 	while True:
 		if i != 0:
 			randomNumber = random.random()
@@ -120,31 +120,30 @@ if __name__ == "__main__":
 			record.append(newRecord)
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
-		sum_of_reward_per_epoch += curr_reward
-		if abs(i - prev_length_of_record) > 200:
+		#sum_of_reward_per_epoch += curr_reward
+		if abs(len(record) - prev_length_of_record) > 200:
 			
-			prev_length_of_record = i		
+			prev_length_of_record = len(record)		
 			#plt.scatter(j,sum_of_reward_per_epoch)
-
 			with open(timestr, 'a') as fp:
 				fp.write(str(sum_of_reward_per_epoch) + '\n')
 				fp.flush()
 			fp.close()
 			#plot_obj.plotting(record)
-			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
-			sum_of_reward_per_epoch = 0
+			#print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
+			#sum_of_reward_per_epoch = 0
 			#j += 1
 			#plot_obj.plotting(record)
-			if len(record) < 1200:
+			if len(record) < 1100:
 				gp_obj.gpq(record)
 			else:
 				print "NO MORE FITTING !!"
 		i += 1
 		#plt.pause(0.05)
-	
-	'''
+	'''	
 	with open ('gp_june9', 'rb') as fp:
 			gp = pickle.load(fp)
+	
 	gp_obj.set_gp(gp)
 	while True:
 		if i != 0:
@@ -162,8 +161,10 @@ if __name__ == "__main__":
 			record.append(newRecord)
 
 		prev_state = next_state
+		'''
 		sum_of_reward_per_epoch += curr_reward
-		if abs(len(record) - prev_length_of_record) > 10:
+
+		if abs(len(record) - prev_length_of_record) > 200:
 			prev_length_of_record = len(record)
 			#plt.scatter(j,sum_of_reward_per_epoch)
 
@@ -176,9 +177,10 @@ if __name__ == "__main__":
 			sum_of_reward_per_epoch = 0
 			#j += 1
 			#plot_obj.plotting(record)
+		'''
 		i += 1
 		#plt.pause(0.05)	
-	'''
+	
 	'''
 	arrayList = []
 	listMu = []

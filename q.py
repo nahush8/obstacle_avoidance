@@ -17,7 +17,6 @@ LASER_MAX_VAL = 10
 numOfActions = 4
 MAX_INIT_Q = -float("inf")
 Q = {((LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL),0):0}
-cache = {(LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL):2}
 count = {((LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL),0):0}
 plt.ion()
 record = []
@@ -43,19 +42,12 @@ class q_class():
 	def choose_action(self,state_x):
 		max_q = MAX_INIT_Q
 		max_action = 0
-		ret = cache.get(tuple(state_x),-999)
-
-		if ret != -999:
-			return ret
-		else:
-
-			for a in range(0,numOfActions):
-				val = Q.get((tuple(state_x),a),float("inf"))
-				if val > max_q:
-					max_q = val
-					max_action = a
-			cache[tuple(state_x)] = max_action
-			return max_action		
+		for a in range(0,numOfActions):
+			val = Q.get((tuple(state_x),a),float("inf"))
+			if val > max_q:
+				max_q = val
+				max_action = a
+		return max_action		
 
 if __name__ == "__main__":
 	epsilon = 0.1
@@ -91,7 +83,7 @@ if __name__ == "__main__":
 			record.append(newRecord)
 		q_obj.updateQ(prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0])
 		prev_state = next_state
-		
+
 		'''
 		if i%200 == 0:
 			for s in states:
