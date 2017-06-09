@@ -20,6 +20,7 @@ Q = {((LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL),0):0}
 count = {((LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL),0):0}
 plt.ion()
 record = []
+epoch = 0
 
 class q_class():
 	def __init__(self):
@@ -76,8 +77,8 @@ if __name__ == "__main__":
 		elif i == 0:
 			action = random.randint(0, numOfActions-1)
 
-		curr_reward, next_state = game_obj.frame_step(action)
-
+		curr_reward, next_state = game_obj.frame_step(action)		
+		epoch = epoch + 1
 		q_obj.updateQ(prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0])
 		prev_state = next_state
 
@@ -106,22 +107,23 @@ if __name__ == "__main__":
 		plt.imshow(heat, cmap='coolwarm', interpolation='nearest')
 		plt.pause(0.05)
 		'''
-		'''
+		
 		sum_of_reward_per_epoch += curr_reward
 		
-		if abs(len(record) - prev_length_of_record) > 10:
-			prev_length_of_record = len(record)
+		if epoch % 200 == 0:
+			#prev_length_of_record = len(record)
 			
-			#plt.scatter(j,sum_of_reward_per_epoch)
-
+			plt.scatter(j,sum_of_reward_per_epoch)
+			'''
 			with open(timestr + '_q', 'a') as fp:
 				fp.write(str(sum_of_reward_per_epoch) + '\n')
 				fp.flush()
 			fp.close()
 			#plot_obj.plotting(record)
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
+			'''
 			sum_of_reward_per_epoch = 0
 			j += 1
 		i+= 1
-		#plt.pause(0.05)
-		'''
+		plt.pause(0.05)
+		

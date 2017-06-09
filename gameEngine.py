@@ -24,7 +24,6 @@ show_sensors = True
 draw_screen = True
 
 
-
 class GameState:
     def __init__(self):
         # Global-ish.
@@ -33,7 +32,6 @@ class GameState:
         self.numOflasersData = 10
         self.spread = 10
         self.distance = 10
-
         # Physics stuff.
         self.space = pymunk.Space()
         self.space.gravity = pymunk.Vec2d(0., 0.)
