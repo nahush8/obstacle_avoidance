@@ -19,6 +19,7 @@ numOfLasers = 3
 record = []
 cache = {(LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL):2}
 epoch = 0
+iteration = 0
 plt.ion()
 
 class gp_prediction():
@@ -94,7 +95,7 @@ if __name__ == "__main__":
 	i = 0
 	j = 0
 	itr = 0	
-	epsilon = 0.05
+	epsilon = 0.1
 	prev_length_of_record = 0
 	game_obj = gameEngine2.GameState()
 	gp_obj = gp_prediction()
@@ -104,7 +105,7 @@ if __name__ == "__main__":
 	next_state = [[LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
 	
-	while True:
+	while epoch < 1000:
 		if i != 0:
 			randomNumber = random.random()
 			if randomNumber >= epsilon:
@@ -115,37 +116,47 @@ if __name__ == "__main__":
 			action = random.randint(0, numOfActions-1)
 
 		curr_reward, next_state = game_obj.frame_step(action)
-		epoch = epoch + 1
+		iteration = iteration + 1
 		newRecord = [prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]]
-		#if newRecord not in record:
-		record.append(newRecord)
+		if newRecord not in record:
+			record.append(newRecord)
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
-		sum_of_reward_per_epoch += curr_reward
-		if epoch % 200 == 0:
-			
-			#prev_length_of_record = len(record)		
-			plt.scatter(j,sum_of_reward_per_epoch)
-			'''
-			with open(timestr, 'a') as fp:
-				fp.write(str(sum_of_reward_per_epoch) + '\n')
-				fp.flush()
-			fp.close()
-			'''
-			#plot_obj.plotting(record)
-			#print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
-			sum_of_reward_per_epoch = 0
-			j += 1
-			#plot_obj.plotting(record)
-			if len(record) < 1100:
+		'''
+		if abs(len(record)-prev_length_of_record) > 200:
+			prev_length_of_record = len(record)	
+			if len(record) < 1200:
 				gp_obj.gpq(record)
 			else:
 				print "NO MORE FITTING !!"
+		'''
+		sum_of_reward_per_epoch += curr_reward
+		#print len(record)
+		if iteration % 200 == 0:
+			
+			#prev_length_of_record = len(record)		
+			#plt.scatter(epoch,sum_of_reward_per_epoch)
+			
+			with open(timestr + '_gpq', 'a') as fp:
+				fp.write(str(sum_of_reward_per_epoch) + '\n')
+				fp.flush()
+			fp.close()
+			
+			#plot_obj.plotting(record)
+			#print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
+			sum_of_reward_per_epoch = 0
+			epoch += 1
+			if epoch < 6:
+				gp_obj.gpq(record)
+			else:
+				print "NO MORE FITTING !!"
+			#plot_obj.plotting(record)
 		i += 1
-		plt.pause(0.05)
+		#plt.pause(0.05)
 		
+	
 	'''
-	with open ('gp_june9', 'rb') as fp:
+	with open ('gp_june9_test', 'rb') as fp:
 			gp = pickle.load(fp)
 	
 	gp_obj.set_gp(gp)
@@ -160,16 +171,17 @@ if __name__ == "__main__":
 		else:
 			action = random.randint(0, 3)
 		curr_reward, next_state = game_obj.frame_step(action)
-		newRecord = [prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]]
+		epoch = epoch + 1
+		#newRecord = [prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]]
 		#if newRecord not in record:
-		record.append(newRecord)
+		#record.append(newRecord)
 		prev_state = next_state
 		
 
 		sum_of_reward_per_epoch += curr_reward
 
-		if abs(len(record) - prev_length_of_record) > 200:
-			prev_length_of_record = len(record)
+		if epoch % 200 == 0:
+			#prev_length_of_record = len(record)
 			#plt.scatter(j,sum_of_reward_per_epoch)
 
 			with open(timestr + '_gpq', 'a') as fp:
