@@ -78,9 +78,6 @@ if __name__ == "__main__":
 
 		curr_reward, next_state = game_obj.frame_step(action)
 
-		newRecord = [prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]]
-		if newRecord not in record:
-			record.append(newRecord)
 		q_obj.updateQ(prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0])
 		prev_state = next_state
 

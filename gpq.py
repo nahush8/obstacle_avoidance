@@ -93,7 +93,7 @@ if __name__ == "__main__":
 	i = 0
 	j = 0
 	itr = 0	
-	epsilon = 0.1
+	epsilon = 0.05
 	prev_length_of_record = 0
 	game_obj = gameEngine2.GameState()
 	gp_obj = gp_prediction()
@@ -147,19 +147,18 @@ if __name__ == "__main__":
 	gp_obj.set_gp(gp)
 	while True:
 		if i != 0:
-			#randomNumber = random.random()
-			#f randomNumber >= epsilon:
-				#action = gp_obj.choose_action(next_state.tolist()[0])
-			#else:
-			#	action = random.randint(0, numOfActions-1)		
-			action = gp_obj.choose_action(next_state.tolist()[0])
+			randomNumber = random.random()
+			if randomNumber >= epsilon:
+				action = gp_obj.choose_action(next_state.tolist()[0])
+			else:
+				action = random.randint(0, numOfActions-1)		
+			#action = gp_obj.choose_action(next_state.tolist()[0])
 		else:
 			action = random.randint(0, 3)
 		curr_reward, next_state = game_obj.frame_step(action)
 		newRecord = [prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]]
-		if newRecord not in record:
-			record.append(newRecord)
-
+		#if newRecord not in record:
+		record.append(newRecord)
 		prev_state = next_state
 		'''
 		sum_of_reward_per_epoch += curr_reward
