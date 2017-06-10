@@ -12,7 +12,7 @@ from keras.callbacks import Callback
 # Adding this per a suggestion by Tim Kelch.
 # https://medium.com/@trkelch/this-post-is-great-possibly-the-best-tutorial-explanation-ive-found-thus-far-cf78886b5378#.w473ywtbw
 import tensorflow as tf
-tf.python.control_flow_ops = tf
+#tf.python.control_flow_ops = tf
 
 
 class LossHistory(Callback):

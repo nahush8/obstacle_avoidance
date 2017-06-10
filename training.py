@@ -87,7 +87,7 @@ def train_net(model, params):
             epsilon -= (1/train_frames)
 
         # We died, so update stuff.
-        if reward == -500:
+        if reward == -5:
             # Log the car's distance at this T.
             data_collect.append([t, car_distance])
 
