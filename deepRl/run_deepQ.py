@@ -51,6 +51,6 @@ def play(model):
     fp.close()
 
 if __name__ == "__main__":
-    saved_model = '164-150-100-50000-2500.h5'
+    saved_model = '164-150-100-50000-50000.h5'
     model = neural_net(NUM_SENSORS, [164, 150], saved_model)
     play(model)
