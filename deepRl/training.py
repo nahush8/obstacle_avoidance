@@ -18,7 +18,7 @@ def train_net(model, params):
     observe = 1000  # Number of frames to observe before training.
     epsilon = 1
     #train_frames = 1000000  # Number of frames to play.
-    train_frames = 3000
+    train_frames = 100000
     batchSize = params['batchSize']
     buffer = params['buffer']
 
@@ -109,7 +109,7 @@ def train_net(model, params):
             start_time = timeit.default_timer()
 
         # Save the model every 25,000 frames.
-        if t == 2500:
+        if t % 25000 == 0:
             model.save_weights(filename + '-' +
                                str(t) + '.h5',
                                overwrite=True)
