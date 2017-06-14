@@ -63,8 +63,6 @@ class GameState:
             s.collision_type = 1
             s.color = THECOLORS['white']
         self.space.add(static)
-
-        print "Calling environment"
         self.env4()
 
         # Create a moving cat

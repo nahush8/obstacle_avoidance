@@ -18,8 +18,6 @@ numOfActions = 4
 numOfLasers = 3
 record = []
 cache = {(LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL):2}
-epoch = 0
-iteration = 0
 plt.ion()
 
 class gp_prediction():
@@ -60,7 +58,7 @@ class gp_prediction():
 		#st = time.time()
 		print "DOING GP FIT"
 		self.gp.fit(dX,tX)
-		with open('gp_june14_env4_2', 'wb') as fp:
+		with open('gp_june14_env4_new', 'wb') as fp:
 			pickle.dump(self.gp, fp)
 		fp.close()
 	#@profile
@@ -96,6 +94,12 @@ if __name__ == "__main__":
 	j = 0
 	itr = 0	
 	epsilon = 0.1
+	good_epoch = 0
+	epoch = 0
+	iteration = 0
+	average_sum_of_rewards = 0
+	prev_epoch_reward = 0
+	net_sum_of_rewards = 0
 	prev_length_of_record = 0
 	game_obj = gameEngine2.GameState()
 	gp_obj = gp_prediction()
@@ -104,7 +108,9 @@ if __name__ == "__main__":
 	prev_state = np.array([prev_state])
 	next_state = [[LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]]
 	timestr = time.strftime("%Y%m%d-%H%M%S")
-	'''
+	maxEpoch = 6
+	record_for_epoch = []
+
 	while epoch < 1000:
 		if i != 0:
 			randomNumber = random.random()
@@ -118,8 +124,11 @@ if __name__ == "__main__":
 		curr_reward, next_state = game_obj.frame_step(action)
 		iteration = iteration + 1
 		newRecord = [prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]]
-		if newRecord not in record:
+		#print newRecord
+		if (newRecord not in record) and epoch < maxEpoch:
 			record.append(newRecord)
+		else:
+			record_for_epoch.append(newRecord)
 		#record.append([prev_state.tolist()[0],action,curr_reward,next_state.tolist()[0]])
 		prev_state = next_state
 		sum_of_reward_per_epoch += curr_reward
@@ -133,21 +142,34 @@ if __name__ == "__main__":
 				fp.write(str(sum_of_reward_per_epoch) + '\n')
 				fp.flush()
 			fp.close()
-			
+		
 			#plot_obj.plotting(record)
 			#print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
-			sum_of_reward_per_epoch = 0
 			epoch += 1
-			if epoch < 10:
+			good_epoch += 1
+			net_sum_of_rewards += sum_of_reward_per_epoch
+			prev_epoch_reward = sum_of_reward_per_epoch
+			if epoch > 0:
+				average_sum_of_rewards = float(net_sum_of_rewards)/float(good_epoch)
+			sum_of_reward_per_epoch = 0
+			if epoch < maxEpoch:
 				gp_obj.gpq(record)
+			elif prev_epoch_reward < (0.75 * (average_sum_of_rewards)):
+				for element in record_for_epoch:
+					#print element
+					record.append(element)
+				gp_obj.gpq(record)
+				net_sum_of_rewards -= prev_epoch_reward
+				good_epoch -= 1
 			else:
 				print "NO MORE FITTING !!"
+			record_for_epoch = []
 			#plot_obj.plotting(record)
 		i += 1
 		#plt.pause(0.05)
 		
-	'''
 	
+	'''
 	with open ('gp_june14_env2', 'rb') as fp:
 			gp = pickle.load(fp)
 	
@@ -187,7 +209,7 @@ if __name__ == "__main__":
 			epoch += 1
 		i += 1
 		#plt.pause(0.05)	
-	
+	'''
 	'''
 	arrayList = []
 	listMu = []
