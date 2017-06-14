@@ -37,7 +37,7 @@ class GameState:
         self.space.gravity = pymunk.Vec2d(0., 0.)
 
         # Create the car.
-        self.create_car(150, 150, 0.5)
+        self.create_car(250, 250, 0.5)
 
         # Record steps.
         self.num_steps = 0
@@ -161,7 +161,7 @@ class GameState:
         self.obstacles.append(self.create_obstacle(300,300,100,450,10))
         self.obstacles.append(self.create_obstacle(300,600,100,450,10))
 
-     def env4(self):
+    def env4(self):
         self.obstacles = []
         self.obstacles.append(self.create_obstacle(50,500,200,50,10))
 

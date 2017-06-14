@@ -60,7 +60,7 @@ class gp_prediction():
 		#st = time.time()
 		print "DOING GP FIT"
 		self.gp.fit(dX,tX)
-		with open('gp_june14_env4', 'wb') as fp:
+		with open('gp_june14_env4_2', 'wb') as fp:
 			pickle.dump(self.gp, fp)
 		fp.close()
 	#@profile
@@ -146,7 +146,7 @@ if __name__ == "__main__":
 			#print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
 			sum_of_reward_per_epoch = 0
 			epoch += 1
-			if epoch < 6:
+			if epoch < 10:
 				gp_obj.gpq(record)
 			else:
 				print "NO MORE FITTING !!"
