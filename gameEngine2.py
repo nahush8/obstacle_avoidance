@@ -65,7 +65,7 @@ class GameState:
         self.space.add(static)
 
         print "Calling environment"
-        self.env3()
+        self.env4()
 
         # Create a moving cat
         #self.create_cat()
@@ -116,7 +116,12 @@ class GameState:
         self.obstacles.append(self.create_circular_obstacle(100,200 ,30)) 
         self.obstacles.append(self.create_circular_obstacle(100,400 ,50))    
         self.obstacles.append(self.create_circular_obstacle(1400,100 ,50)) 
-        self.obstacles.append(self.create_circular_obstacle(400,400 ,150)) 
+        self.obstacles.append(self.create_circular_obstacle(400,100 ,30)) 
+        self.obstacles.append(self.create_circular_obstacle(500,150 ,50)) 
+
+        self.obstacles.append(self.create_circular_obstacle(150,1500 ,25)) 
+        self.obstacles.append(self.create_circular_obstacle(50,50 ,10)) 
+        self.obstacles.append(self.create_circular_obstacle(250,50 ,20)) 
 
 
     def env3(self):
@@ -158,6 +163,33 @@ class GameState:
 
     def env4(self):
         self.obstacles = []
+        self.obstacles.append(self.create_obstacle(50,500,200,50,10))
+
+        self.obstacles.append(self.create_obstacle(200,50,750,300,10))
+        self.obstacles.append(self.create_obstacle(750,300,1300,50,10))
+
+        self.obstacles.append(self.create_obstacle(1300,50,1450,500,10))
+        self.obstacles.append(self.create_obstacle(1450,500,1300,950,10))
+
+        self.obstacles.append(self.create_obstacle(1300,950,750,700,10))
+        self.obstacles.append(self.create_obstacle(750,700,200,950,10))
+
+
+        self.obstacles.append(self.create_obstacle(750,300,750,600,10))
+        self.obstacles.append(self.create_obstacle(750,700,750,650,10))
+
+
+        self.obstacles.append(self.create_obstacle(750,600,1100,500,10))
+        self.obstacles.append(self.create_obstacle(750,650,1200,600,10))
+
+        self.obstacles.append(self.create_obstacle(1100,500,900,400,10))
+        self.obstacles.append(self.create_obstacle(1200,600,1250,450,10))
+        self.obstacles.append(self.create_obstacle(1250,450,900,350,10))
+
+        self.obstacles.append(self.create_obstacle(200,950,50,500,10))
+
+        self.obstacles.append(self.create_circular_obstacle(400,500,250))
+        #self.obstacles.append(self.create_circular_obstacle(1100,500,250))
 
     def create_obstacle(self, x1,y1, x2,y2, r):
         cp = pymunk.body.Body()
