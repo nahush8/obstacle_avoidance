@@ -63,6 +63,15 @@ class GameState:
             s.collision_type = 1
             s.color = THECOLORS['white']
         self.space.add(static)
+        self.env()
+
+        # Create a cat.
+        #self.create_cat()
+        '''
+        self.create_incentive()
+        '''
+      
+    def env(self):
 
         # Create some obstacles, semi-randomly.
         # We'll create three and they'll move around to prevent over-fitting.
@@ -105,12 +114,6 @@ class GameState:
         #self.obstacles.append(self.create_obstacle(700, 200, 125))
         #self.obstacles.append(self.create_obstacle(600, 600, 35))
 
-        # Create a cat.
-        #self.create_cat()
-        '''
-        self.create_incentive()
-        '''
-        
     def create_obstacle(self, x1,y1, x2,y2, r):
         #c_body = pymunk.Body(pymunk.inf, pymunk.inf)
         '''

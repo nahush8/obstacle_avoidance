@@ -115,15 +115,16 @@ if __name__ == "__main__":
 			#prev_length_of_record = len(record)
 			
 			#plt.scatter(epoch,sum_of_reward_per_epoch)
-			
+			'''
 			with open(timestr + '_q', 'a') as fp:
 				fp.write(str(sum_of_reward_per_epoch) + '\n')
 				fp.flush()
 			fp.close()
 			'''
 			#plot_obj.plotting(record)
+			
 			print 'REWARD COLLECTED THIS EPOCH: %d' % sum_of_reward_per_epoch
-			'''
+			
 			sum_of_reward_per_epoch = 0
 			epoch += 1
 		i+= 1

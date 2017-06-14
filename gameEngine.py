@@ -10,8 +10,8 @@ from pymunk.vec2d import Vec2d
 #from pymunk.pygame_util import draw
 import pymunk.pygame_util
 # PyGame init
-width = 1000
-height = 700
+width = 1500
+height = 1000
 pygame.init()
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
@@ -28,7 +28,7 @@ class GameState:
     def __init__(self):
         # Global-ish.
         self.crashed = False
-        self.car_velocity = 50
+        self.car_velocity = 100
         self.numOflasersData = 10
         self.spread = 10
         self.distance = 10
@@ -64,29 +64,31 @@ class GameState:
             s.color = THECOLORS['white']
         self.space.add(static)
 
-        # Create some obstacles, semi-randomly.
-        # We'll create three and they'll move around to prevent over-fitting.
-        #counter-clockwise starting from left bottom
-        a1 = 100
-        b1 = 100
+        print "Calling environment"
+        self.env3()
 
-        a2 = 950
-        b2 = 100
+        # Create a moving cat
+        #self.create_cat()
+        '''
+        self.create_incentive()
+        '''
+        
+    def env1(self):
 
-        a3 = 950
-        b3 = 650
-
-        a4 = 100
-        b4 = 650
-
+        a1 = 50
+        b1 = 50
+        a2 = 1450
+        b2 = 50
+        a3 = 1450
+        b3 = 950
+        a4 = 50
+        b4 = 950
         self.obstacles = []
         self.obstacles.append(self.create_obstacle(a4,b4 ,a1,b1, 10)) #left vertical
         self.obstacles.append(self.create_obstacle(a1,b1 ,a2,b2, 10)) #bottom horizontal
         self.obstacles.append(self.create_obstacle(a2,b2 ,a3,b3, 10)) #right vertical
         self.obstacles.append(self.create_obstacle(a3,b3 ,a4,b4, 10)) #top horizontal
-        
-
-        gap = 100
+        gap = 150
         self.obstacles.append(self.create_obstacle(a4+gap,b4-gap ,a1+gap,b1+gap, 10)) #left vertical
         self.obstacles.append(self.create_obstacle(a2-gap,b2+gap ,a3-gap,b3-gap, 10)) #right vertical
 
@@ -98,30 +100,66 @@ class GameState:
 
         self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap ,a1+gap+200,b4-gap, 10)) #verticle mid left
         self.obstacles.append(self.create_obstacle(a1+gap+400,b2+gap ,a1+gap+400,b3-gap, 10)) #verticle mid right
-        
-        self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap ,a1+gap+400,b2, 10)) #diagonal
-        #self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap ,a1+gap+400,b2+gap, 10)) #bottom mid horizontal
-        #self.obstacles.append(self.create_obstacle(a2-gap,b3-gap ,a2,b3-gap, 10))
-        #self.obstacles.append(self.create_obstacle(700, 200, 125))
-        #self.obstacles.append(self.create_obstacle(600, 600, 35))
+        self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap,a1+gap+400,b2, 10)) #verticle mid right
 
-        # Create a cat.
-        #self.create_cat()
-        '''
-        self.create_incentive()
-        '''
-        
+    def env2(self):
+
+        self.obstacles = []
+        self.obstacles.append(self.create_circular_obstacle(200,600, 100))
+        self.obstacles.append(self.create_circular_obstacle(600,300 ,75)) 
+        self.obstacles.append(self.create_circular_obstacle(1200,100 ,25))
+        self.obstacles.append(self.create_circular_obstacle(100,800 ,100)) 
+        self.obstacles.append(self.create_circular_obstacle(700,700 ,200))
+        self.obstacles.append(self.create_circular_obstacle(1000,300 ,50)) 
+        self.obstacles.append(self.create_circular_obstacle(1300,500 ,20)) 
+        self.obstacles.append(self.create_circular_obstacle(800,400 ,150))  
+        self.obstacles.append(self.create_circular_obstacle(100,200 ,30)) 
+        self.obstacles.append(self.create_circular_obstacle(100,400 ,50))    
+        self.obstacles.append(self.create_circular_obstacle(1400,100 ,50)) 
+        self.obstacles.append(self.create_circular_obstacle(400,400 ,150)) 
+
+
+    def env3(self):
+        self.obstacles = []
+        self.obstacles.append(self.create_obstacle(0,50,1000,50,10))
+        self.obstacles.append(self.create_obstacle(50,200,1000,200,10))
+
+        self.obstacles.append(self.create_obstacle(50,200,50,400,10))
+        self.obstacles.append(self.create_obstacle(0,400,50,400,10))
+
+        self.obstacles.append(self.create_obstacle(1000,50,1400,400,10)) 
+        self.obstacles.append(self.create_obstacle(1000,200,1200,375,10)) 
+
+        self.obstacles.append(self.create_obstacle(1400,400,1400,800,10)) 
+        self.obstacles.append(self.create_obstacle(1200,375,1200,700,10)) 
+
+        self.obstacles.append(self.create_obstacle(1400,800,800,800,10)) 
+        self.obstacles.append(self.create_obstacle(1200,700,800,400,10)) 
+
+        self.obstacles.append(self.create_obstacle(800,800,800,500,10))
+
+        self.obstacles.append(self.create_obstacle(800,400,300,400,10))
+
+        self.obstacles.append(self.create_obstacle(800,500,600,500,10))
+        self.obstacles.append(self.create_obstacle(400,500,300,500,10))
+
+        self.obstacles.append(self.create_obstacle(400,500,400,800,10))
+        self.obstacles.append(self.create_obstacle(600,500,600,800,10))
+
+        #self.obstacles.append(self.create_obstacle(400,900,600,900,10))
+
+        self.obstacles.append(self.create_circular_obstacle(500,800,100))
+
+        self.obstacles.append(self.create_obstacle(300,500,300,600,10))
+        self.obstacles.append(self.create_obstacle(300,400,300,300,10))
+
+        self.obstacles.append(self.create_obstacle(300,300,100,450,10))
+        self.obstacles.append(self.create_obstacle(300,600,100,450,10))
+
+    def env4(self):
+        self.obstacles = []
+
     def create_obstacle(self, x1,y1, x2,y2, r):
-        #c_body = pymunk.Body(pymunk.inf, pymunk.inf)
-        '''
-        c_body = pymunk.Body(1000, pymunk.inf)
-        c_shape = pymunk.Circle(c_body, r)
-        c_shape.elasticity = 1.0
-        c_body.position = x, y
-        c_shape.color = THECOLORS["white"]
-        self.space.add(c_body, c_shape)
-        return c_body
-        '''
         cp = pymunk.body.Body()
         # STATIC OBSTACLE, IGNORE MASS AND MOMENT
         c_body = pymunk.Body(10000, pymunk.inf,body_type=cp.STATIC)
@@ -132,6 +170,19 @@ class GameState:
         c_shape.color = THECOLORS["white"]
         self.space.add(c_body, c_shape)
         return c_body
+
+
+    def create_circular_obstacle(self, x,y,r):
+        #c_body = pymunk.Body(pymunk.inf, pymunk.inf)
+        cp = pymunk.body.Body()
+        c_body = pymunk.Body(1000, pymunk.inf,body_type=cp.STATIC)
+        c_shape = pymunk.Circle(c_body, r)
+        c_shape.elasticity = 0.0
+        c_body.position = x, y
+        c_shape.color = THECOLORS["white"]
+        self.space.add(c_body, c_shape)
+        return c_body
+
     '''
     def create_cat(self):
         inertia = pymunk.moment_for_circle(1, 0, 14, (0, 0))

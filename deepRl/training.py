@@ -28,7 +28,7 @@ def train_net(model, params):
     t = 0
     data_collect = []
     replay = []  # stores tuples of (S, A, R, S').
-
+    epoch = 0
     loss_log = []
     # Create a new game instance.
     game_state = gameEngine.GameState()
@@ -41,7 +41,7 @@ def train_net(model, params):
 
     # Run the frames.
     while t < train_frames:
-
+    #while epoch < 1000:
         t += 1
         car_distance += 1
 
@@ -55,7 +55,7 @@ def train_net(model, params):
 
         # Take action, observe new state and get our treat.
         reward, new_state = game_state.frame_step(action)
-
+        epoch = epoch +1
         # Experience replay storage.
         replay.append((state, action, reward, new_state))
 
