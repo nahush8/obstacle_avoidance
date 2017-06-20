@@ -58,7 +58,7 @@ class gp_prediction():
 		#st = time.time()
 		print "DOING GP FIT"
 		self.gp.fit(dX,tX)
-		with open('gp_june14_env4_new', 'wb') as fp:
+		with open('gp_june17_env3', 'wb') as fp:
 			pickle.dump(self.gp, fp)
 		fp.close()
 	#@profile

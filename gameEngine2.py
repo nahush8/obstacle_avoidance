@@ -37,7 +37,7 @@ class GameState:
         self.space.gravity = pymunk.Vec2d(0., 0.)
 
         # Create the car.
-        self.create_car(250, 250, 0.5)
+        self.create_car(150, 150, 0.5)
 
         # Record steps.
         self.num_steps = 0
@@ -63,7 +63,7 @@ class GameState:
             s.collision_type = 1
             s.color = THECOLORS['white']
         self.space.add(static)
-        self.env4()
+        self.env3()
 
         # Create a moving cat
         #self.create_cat()

@@ -12,6 +12,6 @@ t3 = 1:n3;
 
 plot(t1,q_reward_env4);
 hold on
-plot(t2,gpq_reward_env4);
-hold on;
+%plot(t2,gpq_reward_env4);
+%hold on;
 plot(t3,gpq_reward_env4_2);
