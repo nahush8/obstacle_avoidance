@@ -10,8 +10,11 @@ from pymunk.vec2d import Vec2d
 #from pymunk.pygame_util import draw
 import pymunk.pygame_util
 # PyGame init
-width = 1500
-height = 1000
+#width = 1500
+#height = 1000
+width = 1000
+height = 700
+
 pygame.init()
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
@@ -37,7 +40,7 @@ class GameState:
         self.space.gravity = pymunk.Vec2d(0., 0.)
 
         # Create the car.
-        self.create_car(250, 250, 0.5)
+        self.create_car(150, 150, 0.5)
 
         # Record steps.
         self.num_steps = 0
@@ -63,7 +66,7 @@ class GameState:
             s.collision_type = 1
             s.color = THECOLORS['white']
         self.space.add(static)
-        self.env4()
+        self.env()
 
         # Create a moving cat
         #self.create_cat()
@@ -71,6 +74,44 @@ class GameState:
         self.create_incentive()
         '''
         
+    def env(self):
+        a1 = 100
+        b1 = 100
+
+        a2 = 950
+        b2 = 100
+
+        a3 = 950
+        b3 = 650
+
+        a4 = 100
+        b4 = 650
+
+        self.obstacles = []
+        self.obstacles.append(self.create_obstacle(a4,b4 ,a1,b1, 10)) #left vertical
+        self.obstacles.append(self.create_obstacle(a1,b1 ,a2,b2, 10)) #bottom horizontal
+        self.obstacles.append(self.create_obstacle(a2,b2 ,a3,b3, 10)) #right vertical
+        self.obstacles.append(self.create_obstacle(a3,b3 ,a4,b4, 10)) #top horizontal
+        
+
+        gap = 100
+        self.obstacles.append(self.create_obstacle(a4+gap,b4-gap ,a1+gap,b1+gap, 10)) #left vertical
+        self.obstacles.append(self.create_obstacle(a2-gap,b2+gap ,a3-gap,b3-gap, 10)) #right vertical
+
+        self.obstacles.append(self.create_obstacle(a1+gap,b1+gap ,a1+gap+200,b2+gap, 10)) #bottom horizontal
+        self.obstacles.append(self.create_obstacle(a1+gap+400,b1+gap ,a2-gap,b2+gap, 10)) #bottom horizontal
+        #self.obstacles.append(self.create_obstacle(a2/3+gap,b2+gap ,a3+gap,b1+gap, 10)) #left vertical
+        self.obstacles.append(self.create_obstacle(a1+gap,b4-gap ,a1+gap+200,b3-gap, 10)) #bottom horizontal
+        self.obstacles.append(self.create_obstacle(a1+gap+400,b4-gap ,a2-gap,b3-gap, 10)) #bottom horizontal
+
+        self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap ,a1+gap+200,b4-gap, 10))
+        self.obstacles.append(self.create_obstacle(a1+gap+400,b2+gap ,a1+gap+400,b3-gap, 10))
+        self.obstacles.append(self.create_obstacle(a1+gap+200,b2+gap ,a1+gap+400,b2+gap, 10)) #top horizontal
+        #self.obstacles.append(self.create_obstacle(a2-gap,b3-gap ,a2,b3-gap, 10))
+        #self.obstacles.append(self.create_obstacle(700, 200, 125))
+        #self.obstacles.append(self.create_obstacle(600, 600, 35))
+
+
     def env1(self):
 
         a1 = 50
@@ -351,8 +392,8 @@ class GameState:
                 options = pymunk.pygame_util.DrawOptions(screen)
                 self.space.debug_draw(options)
                 self.space.step(1./10)
-                #if draw_screen:
-                   #pygame.display.flip()
+                if draw_screen:
+                   pygame.display.flip()
                 clock.tick()
             
 

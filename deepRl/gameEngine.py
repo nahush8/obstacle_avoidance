@@ -37,7 +37,7 @@ class GameState:
         self.space.gravity = pymunk.Vec2d(0., 0.)
 
         # Create the car.
-        self.create_car(200, 200, 0.5)
+        self.create_car(150, 150, 0.5)
 
         # Record steps.
         self.num_steps = 0
@@ -65,7 +65,7 @@ class GameState:
         self.space.add(static)
 
         print "Calling environment"
-        self.env4()
+        self.env1()
 
         # Create a moving cat
         #self.create_cat()

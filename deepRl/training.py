@@ -5,6 +5,7 @@ import csv
 from nn import neural_net, LossHistory
 import os.path
 import timeit
+import time
 
 NUM_INPUT = 3
 GAMMA = 0.9  # Forgetting.
@@ -18,7 +19,7 @@ def train_net(model, params):
     observe = 1000  # Number of frames to observe before training.
     epsilon = 1
     #train_frames = 1000000  # Number of frames to play.
-    train_frames = 100000
+    train_frames = 2000
     batchSize = params['batchSize']
     buffer = params['buffer']
 
@@ -34,7 +35,7 @@ def train_net(model, params):
     game_state = gameEngine.GameState()
 
     # Get initial state by doing nothing and getting the state.
-    _, state = game_state.frame_step((2))
+    _, state = game_state.frame_step(2)
 
     # Let's time it.
     start_time = timeit.default_timer()
@@ -53,12 +54,16 @@ def train_net(model, params):
             qval = model.predict(state, batch_size=1)
             action = (np.argmax(qval))  # best
 
+        print action
+        print t
+        print "==========="
+        print "           "
         # Take action, observe new state and get our treat.
         reward, new_state = game_state.frame_step(action)
         epoch = epoch +1
         # Experience replay storage.
         replay.append((state, action, reward, new_state))
-
+        
         # If we're done observing, start training.
         if t > observe:
 
@@ -79,15 +84,15 @@ def train_net(model, params):
                 nb_epoch=1, verbose=0, callbacks=[history]
             )
             loss_log.append(history.losses)
-
+        
         # Update the starting state with S'.
         state = new_state
 
         # Decrement epsilon over time.
-        if epsilon > 0.1 and t > observe:
-            epsilon -= (1/train_frames)
-
-        # We died, so update stuff.
+        if epsilon > 0.1: #and t > observe:
+            #epsilon -= (1/train_frames)
+            epsilon -= (1/ train_frames)
+        # We terminated, so update..
         if reward == -5:
             # Log the car's distance at this T.
             data_collect.append([t, car_distance])
@@ -101,15 +106,16 @@ def train_net(model, params):
             fps = car_distance / tot_time
 
             # Output some stuff so we can watch.
-            print("Max: %d at %d\tepsilon %f\t(%d)\t%f fps" %
-                  (max_car_distance, t, epsilon, car_distance, fps))
+            #print("Max: %d at %d\tepsilon %f\t(%d)\t%f fps" %
+            #      (max_car_distance, t, epsilon, car_distance, fps))
 
             # Reset.
             car_distance = 0
             start_time = timeit.default_timer()
+            epoch = 0
 
         # Save the model every 25,000 frames.
-        if t % 25000 == 0:
+        if t % 1000 == 0:
             model.save_weights(filename + '-' +
                                str(t) + '.h5',
                                overwrite=True)
@@ -141,9 +147,9 @@ def process_minibatch(minibatch, model):
         # Get stored values.
         old_state_m, action_m, reward_m, new_state_m = memory
         # Get prediction on old state.
-        old_qval = model.predict(old_state_m, batch_size=1)
+        old_qval = model.predict(old_state_m.reshape(1,NUM_INPUT), batch_size=1)
         # Get prediction on new state.
-        newQ = model.predict(new_state_m, batch_size=1)
+        newQ = model.predict(new_state_m.reshape(1,NUM_INPUT), batch_size=1)
         # Get our best move. I think?
         maxQ = np.max(newQ)
         y = np.zeros((1, 4))
@@ -151,10 +157,10 @@ def process_minibatch(minibatch, model):
         # Check for terminal state.
         if reward_m != -5:  # non-terminal state
             update = (reward_m + (GAMMA * maxQ))
-        else:  # terminal state
+        else:  #terminal state
             update = reward_m
         # Update the value for the action we took.
-        y[0][action_m] = update
+        y[0][action_m] = update #target value
         X_train.append(old_state_m.reshape(NUM_INPUT,))
         y_train.append(y.reshape(4,))
 
@@ -186,6 +192,7 @@ def launch_learn(params):
 
 
 if __name__ == "__main__":
+    '''
     if TUNING:
         param_list = []
         nn_params = [[164, 150], [256, 256],
@@ -207,11 +214,12 @@ if __name__ == "__main__":
             launch_learn(param_set)
 
     else:
-        nn_param = [164, 150]
-        params = {
-            "batchSize": 100,
-            "buffer": 50000,
-            "nn": nn_param
-        }
-        model = neural_net(NUM_INPUT, nn_param)
-        train_net(model, params)
+    '''    
+    nn_param = [164, 150]
+    params = {
+        "batchSize": 100,
+        "buffer": 50000,
+        "nn": nn_param
+    }
+    model = neural_net(NUM_INPUT, nn_param)
+    train_net(model, params)

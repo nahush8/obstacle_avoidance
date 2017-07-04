@@ -101,7 +101,7 @@ if __name__ == "__main__":
 	prev_epoch_reward = 0
 	net_sum_of_rewards = 0
 	prev_length_of_record = 0
-	game_obj = gameEngine2.GameState()
+	game_obj = gameEngin2.GameState()
 	gp_obj = gp_prediction()
 	sum_of_reward_per_epoch = 0
 	prev_state = [LASER_MAX_VAL,LASER_MAX_VAL,LASER_MAX_VAL]
@@ -110,7 +110,7 @@ if __name__ == "__main__":
 	timestr = time.strftime("%Y%m%d-%H%M%S")
 	maxEpoch = 6
 	record_for_epoch = []
-
+	
 	while epoch < 1000:
 		if i != 0:
 			randomNumber = random.random()

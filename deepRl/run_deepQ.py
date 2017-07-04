@@ -1,7 +1,6 @@
 """
 Once a model is learned, use this to play it.
 """
-
 import gameEngine
 import numpy as np
 from nn import neural_net
@@ -35,6 +34,7 @@ def play(model):
        
         # Take action.
         curr_reward, state = game_state.frame_step(action)
+        #time.sleep(0.1)
         iteration += 1
         sum_of_reward_per_epoch += curr_reward
         
@@ -51,6 +51,6 @@ def play(model):
     fp.close()
 
 if __name__ == "__main__":
-    saved_model = '164-150-100-50000-50000.h5'
+    saved_model = '164-150-100-50000-2000.h5'
     model = neural_net(NUM_SENSORS, [164, 150], saved_model)
-    play(model)
+    play(model) 
