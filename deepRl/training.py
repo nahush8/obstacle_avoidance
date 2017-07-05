@@ -112,7 +112,7 @@ def train_net(model, params):
             # Reset.
             car_distance = 0
             start_time = timeit.default_timer()
-            epoch = 0
+            #epoch = 0
 
         # Save the model every 25,000 frames.
         if t % 1000 == 0:
